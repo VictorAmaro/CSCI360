@@ -1,0 +1,95 @@
+//KC03GFCA JOB ,'VICTOR',MSGCLASS=H                                   
+//STEP1 EXEC PGM=ASSIST,PARM='MACRO=F'                                
+//STEPLIB DD DSN=KC02293.ASSIST.LOADLIB,DISP=SHR                       
+//SYSIN DD *                                                           
+***************************************                                 
+*Victor Amaro                         *                                
+*Dr. Jim Leon                         *                                
+*CSCI 360, Section 2                  *                                
+*TA: Grace                            *                                
+*z1747708                             *                                
+*Assignment 2: Performs mileage stats *                                 
+***************************************                                
+MAIN    CSECT                                                           
+        USING MAIN,15        BASE REG                                   
+        SR R11,11            SET R11 TO ZERO(COUNTER FOR TOTAL MPG)     
+        SR R9,R9             SET R9 TO ZERO(COUNTER FOR TOTAL CARS)     
+        SR R7,R7             SET R7 TO ZERO(COUNTER FOR TOTAL GALLONS)  
+        XPRNT PLINE1,51      PRINT NIU VEHICLE REPORT HEADER            
+        XPRNT PLINE2,61      PRINT DESCRIPTION HEADER               
+*                                                                       
+TOP     XREAD CARD,80        READ RECORD                               
+        BC B'0100',EXIT      CHECK FOR EOF                            
+        XDECI R2,CARD        GET FIRST NUM(VEHICLE NUM)             
+        XDECI R5,0(R1)       GET SECOND NUM(MILES)                     
+        XDECI R3,0(R1)       GET THRID NUM(GALLONS)                    
+        XDECO R2,OUTPT1      PREPARE TO PRINT CAR NUM                 
+        XDECO R5,OUTPT2      PREPARE TO PRINT MILES                    
+        XDECO R3,OUTPT3      PREPARE TO PRINT GALLONS                  
+        A R9,ONE             ADD ONE TO R6(VEHICLE COUNT)            
+        AR R7,R3             COUNTER FOR TOTAL GALLONSNS              
+        M R4,ONE             SET R4 FOR DIVISION                       
+        DR R4,R3             FIND MILES PER GALLON                      
+        AR R11,R5            ADD MILES/GALLONS TO COUNT               
+        XDECO R5,OUTPT4      PREPARE TO PRINT MILES/GALLONS           
+        XPRNT PLINE3,49      PRINT VEHICLE INFO                      
+        B TOP                GO TO TOP OF LOOP                         
+*                                                                       
+EXIT    XDECO R9,OUTPT5     PREPARE TO PRINT NUMBER OF VEHICLES        
+        XPRNT PLINE4,38     PRINT NUMBER OF VEHICLES                  
+        M R6,THREE          FIND TOTAL COST OF GAS                    
+        XDECO R7,OUTPT6     PREPARE TO PRINT TOTAL COST OF GAS       
+        XPRNT PLINE5,42     PRINT TOTAL COST OF GAS                   
+        M R10,ONE           PREPARE R10 FOR DIVSION                    
+        DR R10,R9           FIND THE AVERAGE MPG                       
+        XDECO R11,OUTPT7    PREPARE TO PRINT AVERAGE MPG                
+        XPRNT PLINE6,25     PRINT THE AVERAGE MPG                      
+        BR R14              EXIT PROGRAM                               
+********************************************************************   
+*                  MAIN STORAGE                                    *   
+********************************************************************    
+CARD  DC 20CL4'CARD'                                 80 BYTE CARD       
+PLINE1 DC CL1' '                                     CARRIAGE CONTROL  
+       DC CL50'                 NIU VEHICLE REPORT'  HEADER            
+PLINE2 DC CL1' '                                     CARRIAGE CONTROL   
+       DC CL60'           VEHICLE   GALLONS   MILES  MILES/GALLONS'     
+PLINE3 DC CL1' '                                                        
+OUTPT1 DC CL12'OUTPT'                                CAR NUMBER         
+OUTPT2 DC CL12'OUTPT'                                MILES            
+OUTPT3 DC CL12'OUTPT'                                GALLONS            
+OUTPT4 DC CL12'OUTPT'                                MILES/GALLONS    
+PLINE4 DC CL1' '                                     CARRIAGE CONTROL   
+       DC CL24'TOTAL CAR PROCESESS:'                 TOTAL CAR HEADER  
+OUTPT5 DC CL12'OUTPT'                                NUMBER OF VEHICLES 
+PLINE5 DC CL1' '                                     CARRIAGE CONTROL   
+       DC CL29'TOTAL COST OF GAS IN DOLLARS:'        TOTAL DOLLAR AMT   
+OUTPT6 DC CL12'OUTPT'                                TOTAL COST OF GAS  
+ONE    DC F'1'                                       FULLWORD, 1       
+THREE  DC F'3'                                       FULLWORD, 3       
+PLINE6 DC CL1' '                                     CARRIAGE CONTROL  
+       DC CL12'AVERAGE MPG:'                        AVERAGE MPG HEADER  
+OUTPT7 DC CL12'OUTPT'                               AVERAGE MPG         
+R14  EQU 14                                                             
+R15  EQU 15                                                            
+R1   EQU  1                                                           
+R2   EQU  2                                                            
+R3   EQU  3                                                        
+R5   EQU  5                                                            
+R4   EQU  4                                                          
+R6   EQU  6                                                            
+R7   EQU  7                                                           
+R9   EQU  9                                                           
+R10  EQU 10                                                           
+R11  EQU 11                                                           
+     END                                                               
+/*                                                                    
+//FT05F001 DD *                                                      
+0001   300   30                                                        
+0002   550   24                                                      
+3333  1200  130                                                        
+4444   600   35                                                       
+5555   750   70                                                       
+6666  1000   45                                                        
+7777  1600  105                                                         
+/*                                                                    
+//SYSPRINT DD SYSOUT=*                                                 

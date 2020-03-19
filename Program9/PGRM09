@@ -1,0 +1,269 @@
+//KC03GFCA JOB ,'VICTOR',MSGCLASS=H                                     00000100
+//STEP1 EXEC PGM=ASSIST,PARM='MACRO=F'                                  00000200
+//STEPLIB DD DSN=KC02293.ASSIST.LOADLIB,DISP=SHR                        00000300
+//SYSIN DD *                                                            00000400
+*******************************************************************     00000500
+*Victor Amaro                                                     *     00000600
+*Dr. Jim Leon                                                     *     00000700
+*CSCI 360, Section 2                                              *     00000800
+*TA: Grace                                                        *     00000900
+*z1747708                                                         *     00001000
+*Assignment 9:Advanced Instructions and Macros                    *     00001100
+*******************************************************************     00001500
+       MACRO                                                            00001501
+&LABEL POINTS &TABLE                                                    00001502
+.**************************************                                 00001503
+.*        MACRO NAME: POINTS          *                                 00001504
+.*        PARAMATERS: ONE (TABLE)     *                                 00001505
+.* Go through the 4 entry table.      *                                 00001506
+.* Multiply the count field by 1024.  *                                 00001507
+.* REG USAGE: R7 - HOLD COUNT         *                                 00001508
+.*            R10 - TABLE PTR         *                                 00001509
+.**************************************                                 00001512
+       AIF ('&TABLE' NE '').GOOD                                        00001513
+       MNOTE '** PARAM MISSING ***'                                     00001514
+       MEXIT                                                            00001515
+.GOOD  ANOP                                                             00001516
+&LABEL STM R1,R2,SAVE&SYSNDX                                            00001517
+       B O&SYSNDX                                                       00001518
+SAVE&SYSNDX DC 7F'-1'                                                   00001519
+O&SYSNDX LA R10,&TABLE                                                  00001520
+       LH R7,8(R10)                                                     00001525
+       SLL R7,10                                                        00001534
+       STH R7,10(R10)                                                   00001535
+*                                                                       00001536
+       LA R10,&TABLE+12                                                 00001537
+       LH 7,8(R10)                                                      00001538
+       SLL R7,10                                                        00001539
+       STH R7,10(R10)                                                   00001540
+*                                                                       00001541
+       LA R10,&TABLE+24                                                 00001542
+       LH 7,8(R10)                                                      00001543
+       SLL R7,10                                                        00001544
+       STH R7,10(R10)                                                   00001545
+*                                                                       00001546
+       LA R10,&TABLE+36                                                 00001547
+       LH R7,8(R10)                                                     00001548
+       SLL R7,10                                                        00001549
+       STH R7,10(R10)                                                   00001550
+*                                                                       00001551
+       LM R1,R2,SAVE&SYSNDX                                             00001554
+       MEND                                                             00001555
+********************************************************************    00001556
+TAB     DSECT                                                           00001557
+$TNAME   DS CL8                                 NAME OF AIRLINE         00001558
+$TCOUNT  DS H                                   COUNT OF FLIGHTS        00001559
+$TPOINTS DS H                                   POINTS EARNED           00001560
+*                                                                       00001561
+*                                                                       00001570
+MAIN    CSECT                                                           00001610
+        STM R14,R12,12(R13)                     SAVE CALLERS REGS       00001700
+        LR R12,R15                              POINT 12 AT MAIN        00001800
+        USING MAIN,R12                          SET BASE REG            00001900
+        LA R14,MSAVE                            POINT TO MSAVE AREA     00002000
+        ST R14,8(R13)                           SET FORWARD PTR         00002100
+        ST R13,4(R14)                           SET BACK PTR            00002200
+        LR R13,R14                              R13 IS AT MSAVE         00002300
+**                                                                      00002400
+        XC TABLE(48),TABLE                      ZERO OUT TABLE          00002410
+        BAL R11,BUILD                           CALL BUILD ROUTINE      00002420
+        XDUMP TABLE,60                          DUMP OUT TABLE          00002430
+        BAL R11,PRNT                            CALL PRNT ROUTINE       00002440
+**                                                                      00002500
+        L  R13,4(R13)                           GET OUT BACK PTR        00002600
+        LM R14,R12,12(R13)                      RESTORE REGS            00002700
+        BR 14                                   RETURN LINKAGE          00002800
+******************************************************************      00002900
+*                     MAIN STORAGE                               *      00003000
+******************************************************************      00003100
+MSAVE DC 18F'-1'                                   MAIN SAVE AREA       00003200
+PAD   DC CL66'PAD'                                                      00003201
+      ORG MAIN+((*-MAIN+31)/32*32)                                      00003202
+TABLE DC 4CL12'ENTRY'                              MY TABLE             00003203
+      LTORG                                                             00003206
+*                                                                       00003210
+*                                                                       00003220
+***************************************************                     00003230
+*NAME: BUILD                                      *                     00003240
+*FUNCTION: BUILDS THE TABLE                       *                     00003250
+*REG USEAGE: R10 - TABLE/DSECT PTR                *                     00003260
+*            R9  - LOOP COUNTER                   *                     00003270
+*            R8  - HOLDS 4                        *                     00003271
+*            R7  - FLIGHT COUNTER                 *                     00003272
+*            R6  - HOLDS DIGIT                    *                     00003273
+***************************************************                     00003280
+BUILD   DS 0H                                    BUILD STARTS HERE      00003290
+        LA R10,TABLE                             POINT TO THE TABLE     00003291
+        USING TAB,R10                            SET DSECT BASE REG     00003292
+        XR R9,R9                                 COUNTER TO ZERO        00003293
+        LA R8,4                                  SET R8 TO 4            00003295
+DO      DS 0H                                    START OF DO LOOP       00003296
+        XREAD CARD,80                            READ REC               00003297
+        BC B'0100',DIE                           CHECK FOR EOF          00003298
+        MVC $TNAME(8),INNME                      BRING IN AIRLINE NAME  00003299
+        LA R9,1(R9)                              ADD ONE TO COUNTER     00003300
+        LA R10,12(R10)                           BUMP TABLE             00003301
+IF      DS 0H                                    START OF IF            00003302
+        CR R9,R8                                 DOES R9 HOLD 4?        00003303
+        BE ENDDO                                 YES, GO TO ENDDO       00003304
+        B DO                                     BACK TO DO             00003305
+ENDDO   DS 0H                                    END OF DO LOOP         00003306
+**                                                                      00003307
+        ST R10,EOT                               SAVE EOT               00003308
+        XR R6,R6                                 ZERO OUT R6            00003309
+DO2     DS 0H                                    START OF DO2 LOOP      00003310
+        XREAD CARD,80                            READ REC               00003311
+        BC B'0100',ENDDO2                        CHECK FOR EOF          00003312
+        BH DIE                                                          00003313
+        PACK TEMP(8),INNME(1)                    PACK SINGLE DIGIT      00003314
+        CVB R6,TEMP                              TO A REG               00003315
+        STCM R6,B'0001',BYTE                     STORE FAR RIGHT BYTE   00003316
+**                                                                      00003318
+IF2     TM BYTE,B'00000001'                      AMERICAN?              00003319
+        BNO IF3                                  NO,NEXT                00003320
+        LA R10,TABLE                             LOAD TABLE             00003321
+        XR R7,R7                                 COUNTER TO ZERO        00003322
+        ICM  R7,B'0011',$TCOUNT                  BRING IN COUNT         00003323
+        LA R7,1(R7)                              ADD ONE TO COUNT       00003324
+        STCM R7,B'0011',$TCOUNT                  TAKE COUNT OUT         00003325
+        B BOT                                    DOWN TO BOT            00003326
+**                                                                      00003327
+IF3     TM BYTE,B'00000010'                      DELTA?                 00003328
+        BNO IF4                                  NO,NEXT                00003329
+        LA R10,TABLE+12                          LOAD TABLE             00003331
+        XR R7,R7                                 COUNTER TO ZERO        00003332
+        ICM  R7,B'0011',$TCOUNT                  BRING IN COUNT         00003333
+        LA R7,1(R7)                              ADD ONE TO COUNT       00003334
+        STCM R7,B'0011',$TCOUNT                  TAKE COUNT OUT         00003335
+        B BOT                                    DOWN TO BOTTOM         00003336
+**                                                                      00003337
+IF4     TM BYTE,B'00000100'                      MIDWEST?               00003338
+        BNO IF5                                  NO,NEXT                00003339
+        LA R10,TABLE+24                          LOAD TABLE             00003341
+        XR R7,R7                                 COUNTER TO ZERO        00003342
+        ICM  R7,B'0011',$TCOUNT                  BRING IN COUNT         00003343
+        LA R7,1(R7)                              ADD ONE TO COUNT       00003344
+        STCM R7,B'0011',$TCOUNT                  TAKE COUNT OUT         00003345
+        B BOT                                    DOWN TO BOTTOM         00003346
+**                                                                      00003347
+IF5     TM BYTE,B'00001000'                      UNITED?                00003348
+        LA R10,TABLE+36                          LOAD TABLE             00003350
+        XR R7,R7                                 COUNTER TO ZERO        00003351
+        ICM  R7,B'0011',$TCOUNT                  BRING IN COUNT         00003352
+        LA R7,1(R7)                              ADD ONE TO COUNT       00003353
+        STCM R7,B'0011',$TCOUNT                  TAKE COUNT OUT         00003354
+        B BOT                                    DOWN TO BOTTOM         00003355
+**                                                                      00003356
+BOT     DS 0H                                                           00003357
+        B DO2                                    BACK UP TO DO2         00003358
+ENDDO2  DS 0H                                    END OF DO2 LOOP        00003359
+        POINTS                                                          00003361
+        POINTS TABLE                                                    00003362
+        DROP R10                                 DROP DSECT REG         00003363
+        BR R11                                   BACK TO MAIN           00003364
+***************************************************                     00003365
+*               BUILD STORAGE                     *                     00003366
+***************************************************                     00003367
+EOT   DC F'-5'                                   EOT SAVED HERE         00003368
+BYTE  DC XL1'1'                                  FLAG BYTE              00003369
+      DS 0D                                                             00003370
+TEMP  DC PL8'0'                                  STORE DIGIT            00003371
+CARD  DS 0CL80                                   80 BYTE CARD           00003372
+INNME DC CL8'NAME'                               AIRLINE NAME           00003373
+PADD  DC CL72'PADD'                              PAD                    00003374
+DIE   DC H'00'                                   SAFETY VAR             00003375
+      LTORG                                                             00003376
+*                                                                       00003377
+*                                                                       00003378
+*******************************************************************     00003379
+*NAME: PRINT                                                      *     00003380
+*FUNCTION: PRINT THE TABLEE                                       *     00003381
+*REGS: R10 - TABLE/DSECT PTR                                      *     00003382
+*      R3 - HOLDS EOT                                             *     00003383
+*      R4 - HOLD COUNTS                                           *     00003384
+*******************************************************************     00003385
+PRNT    DS 0H                                    PRINT STARTS HERE      00003386
+        LA R10,TABLE                             POINT TO THE TABLE     00003387
+        USING TAB,R10                            SET DSECT BASE REG     00003389
+        L R3,EOT                                 BRING IN EOT           00003390
+        XPRNT =CL2' ',2                          NEW LINE               00003391
+        XPRNT =CL27'              AIRLINE STATS',27          HEADER     00003392
+        XPRNT =CL46' AIRLINE    NUMBER OF FLIGHTS    POINTS EARNED',46  00003393
+        XPRNT =CL2' ',2                          NEW LINE               00003394
+DO4     DS 0H                                    START OF DO2 LOOP      00003395
+        CR R10,R3                                EOT REACHED?           00003396
+        BE ENDDO4                                YES, GO TO ENDDO2      00003397
+        BH DIE                                   ERROR                  00003398
+*                                                                       00003399
+        MVC PLINE+1(8),$TNAME                    AIRLINE NAME TO PLINE  00003400
+*                                                                       00003401
+        LH R4,$TCOUNT                            BRING IN TCOUNT        00003402
+        CVD R4,OUTTL                             OUT TO OUTTL           00003403
+        ZAP OUTF(4),OUTTL(8)                    ZAP TO SMALLER FIELD    00003404
+        MVC PLINE+14(8),=XL8'4020202020202020'  PATTERN                 00003405
+        ED PLINE+14(8),OUTF                     TO PLINE                00003406
+*                                                                       00003407
+        LH R4,$TPOINTS                          BRING IN TOTAL POINTS   00003408
+        CVD R4,OUTPT                            OUT TO OUTPT            00003409
+        ZAP OUTP(4),OUTPT(8)                    ZAP TO SMALLER FIELD    00003410
+        MVC PLINE+35(8),=XL8'4020202020202020'  PATTERN                 00003411
+        ED PLINE+35(8),OUTP                     TO PLINE                00003412
+*                                                                       00003413
+        XPRNT PLINE,100                         PRINT AIRLINE INFO      00003414
+        LA R10,12(R10)                          BUMP TABLE              00003415
+        B DO4                                   BACK TO DO2             00003416
+ENDDO4  DS 0H                                                           00003417
+        DROP R10                                                        00003418
+        XPRNT =CL2' ',2                         NEW LINE                00003419
+        BR R11                                  BACK TO MAIN            00003420
+***************************************************                     00003421
+*                PRNT STORAGE                     *                     00003422
+***************************************************                     00003423
+      DS 0D                                                             00003424
+OUTTL DC PL8'0'                                  NUM OF FLIGHTS         00003425
+      DS 0D                                                             00003426
+OUTPT DC PL8'0'                                  TOTAL POINTS           00003427
+OUTF  DC PL4'0'                                  NUM OF FLIGHTS(OUT)    00003428
+OUTP  DC PL4'0'                                  TOTAL POINTS(OUT)      00003429
+PLINE DC CL100' TEMP'                            AIRLINE INFO           00003430
+*                                                                       00003431
+*                                                                       00003432
+R15  EQU  15                                                            00003433
+R14  EQU  14                                                            00003440
+R13  EQU  13                                                            00003500
+R12  EQU  12                                                            00003600
+R11  EQU  11                                                            00003700
+R10  EQU  10                                                            00003800
+R9   EQU   9                                                            00003900
+R8   EQU   8                                                            00004000
+R7   EQU   7                                                            00004100
+R6   EQU   6                                                            00004200
+R5   EQU   5                                                            00004210
+R4   EQU   4                                                            00004300
+R3   EQU   3                                                            00004400
+R2   EQU   2                                                            00004500
+R1   EQU   1                                                            00004600
+     END                                                                00004700
+/*                                                                      00004710
+//FT05F001 DD *                                                         00004720
+AMERICAN                                                                00004730
+DELTA                                                                   00004740
+MIDWEST                                                                 00004750
+UNITED                                                                  00004760
+8                                                                       00004770
+1                                                                       00004780
+8                                                                       00004790
+8                                                                       00004791
+8                                                                       00004792
+8                                                                       00004793
+4                                                                       00004794
+4                                                                       00004795
+4                                                                       00004796
+4                                                                       00004797
+4                                                                       00004798
+2                                                                       00004799
+1                                                                       00004800
+4                                                                       00004810
+4                                                                       00004820
+/*                                                                      00004830
+//SYSPRINT DD SYSOUT=*                                                  00004900

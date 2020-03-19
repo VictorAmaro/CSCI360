@@ -1,0 +1,123 @@
+//KC03GFCA JOB ,'VICTOR',MSGCLASS=H                                
+//STEP1 EXEC PGM=ASSIST,PARM='MACRO=F'                             
+//STEPLIB DD DSN=KC02293.ASSIST.LOADLIB,DISP=SHR                      
+//SYSIN DD *                                                           
+*******************************************************************    
+*Victor Amaro                                                     *     
+*Dr. Jim Leon                                                     *     
+*CSCI 360, Section 2                                              *    
+*TA: Grace                                                        *     
+*z1747708                                                         *     
+*Assignment: Produce a weekly payroll report on hourly employees. *     
+*******************************************************************     
+MAIN    CSECT                                                           
+        USING MAIN,R15                                 BASE REG         
+        XPRNT PLINE1,21                                PRINT 1ST HEADER 
+        XPRNT PLINE2,51                                PRINT 2ND HEADER
+        SR R8,R8                                       ZERO 0 TOTAL PAY 
+        SR R4,R4                                       HIGHEST PAY VAR  
+        L  R9,BG                                    SET LOWEST DEFAULT  
+*                                                                      
+TOP     XREAD CARD,80                                  READ RECORD      
+        BC B'0100',EXIT                                CHECK FOR EOF    
+        XDECI R3,CARD                                  GET WORKED HOURS 
+        XDECI R5,0(R1)                                 GET PAYRATE      
+        XDECI R7,0(R1)                                 GET BONUS AMOUNT 
+        SR R6,R6                                       RESET TOTAL PAY 
+IF      C R3,FORTY                                     IF HOURS>40      
+        BC B'1101',ELSE                    IF LESS THAN, GO TO ELSE     
+        S R3,FORTY                                     FIND OT HRS      
+        LR R13,R3                                    LOAD OT HRS TO R13
+        L R3,FORTY                                   LOAD 40(HRS) TO R3 
+        MR R2,R5                                       FIND BASEPAY    
+        LR R11,R5                          LOAD BASEPAY INTO TEMP VAR   
+        M R10,ONE                                   PREPARE FOR DIVSION 
+        D R10,TWO                          DIVIDE BY 2 TO FIND OT RATE 
+        AR R11,R5                                      OT PAYRATE      
+        MR R12,R11                                     FIND OT PAY      
+        BC B'1111',ENDIF                   THE END OF THE IF BODY       
+ELSE    DS 0H                                          ELSE HOURS<40    
+        MR R2,R5                                       FIND BASEPAY    
+        SR R13,R13                              ZERO OVERTIME HOURS    
+ENDIF   DS 0H                                                          
+        AR R6,R7                                (BONUS)ADD TO TOTAL PAY 
+        AR R6,R13                          (OT PAYRATE)ADD TO TOTAL PAY 
+        AR R6,R3                             (BASE PAY)ADD TO TOTAL PAY 
+IF2     CR R6,R4                           CURRENT TOTAL > HIGHEST PAY  
+        BC B'1101',ENDIF2                       IF NOT, GO TO ENDIF2   
+        LR R4,R6                                       NEW HIGHEST PAY  
+ENDIF2  DS 0H                                          END OF IF BODY   
+IF3     CR R6,R9                           CURRENT TOAL < LOWEST PAY   
+        BNL ENDIF3                              IF NOT, GO TO ENDIF3    
+        LR R9,R6                                       NEW LOWEST PAY  
+ENDIF3  DS 0H                                          END OF IF BODY   
+        AR R8,R6                                KEEP TRACK OF WHOLE PAY 
+        XDECO R3,OUTPT1                      (BASE PAY)PREPARE TO PRINT 
+        XDECO R13,OUTPT2                       (OT PAY)PREPARE TO PRINT 
+        XDECO R7,OUTPT3                         (BONUS)PREPARE TO PRINT 
+        XDECO R6,OUTPT4                     (TOTAL PAY)PREPARE TO PRINT 
+        XPRNT PLINE4,50                                PRINT PAY INFO  
+        B TOP                                          GO TO TOP       
+*                                                                       
+EXIT    XDECO R8,OUTPT5                     (WHOLE PAY)PREPARE TO PRINT 
+        XPRNT PLINE3,32                                PRINT WHOLE PAY  
+        XDECO R4,OUTPT6                   (HIGHEST PAY)PREPARE TO PRINT 
+        XPRNT PLINE5,25                               PRINT HIGHEST PAY 
+        XDECO R9,OUTPT7                   (LOWEST PAY)PREPARE TO PRINT  
+        XPRNT PLINE6,25                               PRINT LOWEST PAY  
+        BR R14                                         EXIT PROGRAM    
+**********************************                                      
+*         MAIN STORAGE           *                                     
+**********************************                                      
+BG     DC F'9999'                                      FULLWORD         
+TWO    DC F'2'                                         FULLWORD  2     
+FORTY  DC F'40'                                        FULLWORD 40      
+ONE    DC F'1'                                         FULLWORD  1     
+CARD   DC 20CL4'CARD'                                  80 BYTE CARD    
+PLINE1 DC CL1' '                                       CARRIAGE CONTROL
+       DC CL20'         NIU PAYROLL'                     HEADER2        
+PLINE2 DC CL1' '                                       CARRIAGE CONTROL
+       DC CL49'     BASE PAY    OVERTIME    BONUS      TOTAL PAY'       
+PLINE3 DC CL1' '                                       CARRIAGE CONTROL 
+       DC CL18'TOTAL PAY AMOUNT:'                      WHOLE PAY HEADER 
+OUTPT5 DC CL12'OUTPT'                                  WHOLE PAY OUTPUT 
+PLINE5 DC CL1' '                                       CARRIAGE CONTROL 
+       DC CL12'HIGHEST PAY:'                         HIGHEST PAY HEADER 
+OUTPT6 DC CL12'OUTPT'                                HIGHEST PAY AMOUNT 
+PLINE6 DC CL1' '                                       CARRIAGE CONTROL 
+       DC CL12'LOWEST PAY:'                          LOWEST PAY HEADER  
+OUTPT7 DC CL12'OUTPT'                                LOWEST PAY AMOUNT  
+PLINE4 DC CL1' '                                       CARRIAGE CONTROL 
+       DC CL1' '                                                        
+OUTPT1 DC CL12'OUTPT'                                  BASEPAY OUTPUT   
+OUTPT2 DC CL12'OUTPT'                                  OVERTIME OUTPUT 
+OUTPT3 DC CL12'OUTPT'                                  BONUS OUTPUT     
+OUTPT4 DC CL12'OUTPT'                                  TOTAL PAY OUTPUT 
+R15  EQU  15                                                       
+R14  EQU  14                                                      
+R13  EQU  13                                                    
+R12  EQU  12                                                     
+R11  EQU  11                                                      
+R10  EQU  10                                                      
+R9   EQU   9                                                           
+R8   EQU   8                                                          
+R7   EQU   7                                                       
+R6   EQU   6                                                       
+R5   EQU   5                                                   
+R4   EQU   4                                                     
+R3   EQU   3                                                        
+R2   EQU   2                                                    
+R1   EQU   1                                                     
+R0   EQU   0                                                     
+     END                                                        
+/*                                                              
+//FT05F001 DD *                                                 
+43   20     1500                                             
+09   50     1000                                             
+24   40     0000                                             
+42   35     1900                                                
+60   30     1700                                             
+47   10     2000                                              
+30   25     1000                                                 
+/*                                                                  
+//SYSPRINT DD SYSOUT=*      

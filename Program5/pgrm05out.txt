@@ -1,0 +1,281 @@
+1                    J E S 2  J O B  L O G  --  S Y S T E M  S 0 W 1  --  N O D E  Z O S K C T R         
+0 
+ 17.06.41 JOB07749 ---- THURSDAY,  23 MAR 2017 ----
+ 17.06.41 JOB07749  IRR010I  USERID KC03GFC  IS ASSIGNED TO THIS JOB.
+ 17.06.41 JOB07749  ICH70001I KC03GFC  LAST ACCESS AT 17:03:25 ON THURSDAY, MARCH 23, 2017
+ 17.06.41 JOB07749  $HASP373 KC03GFCA STARTED - INIT 2    - CLASS A        - SYS S0W1
+ 17.06.41 JOB07749  -                                         --TIMINGS (MINS.)--            ----PAGING COUNTS---
+ 17.06.41 JOB07749  -JOBNAME  STEPNAME PROCSTEP    RC   EXCP    TCB    SRB  CLOCK   SERV  PG   PAGE   SWAP    VIO SWAPS
+ 17.06.41 JOB07749  -KC03GFCA                      00     51 ******    .00     .0    175   0      0      0      0     0
+ 17.06.41 JOB07749  -KC03GFCA ENDED.  NAME-VICTOR               TOTAL TCB CPU TIME=   .00  TOTAL ELAPSED TIME=    .0
+ 17.06.41 JOB07749  $HASP395 KC03GFCA ENDED
+0------ JES2 JOB STATISTICS ------
+-  23 MAR 2017 JOB EXECUTION DATE
+-          171 CARDS READ
+-          281 SYSOUT PRINT RECORDS
+-            0 SYSOUT PUNCH RECORDS
+-           26 SYSOUT SPOOL KBYTES
+-         0.00 MINUTES EXECUTION TIME
+         1 //KC03GFCA JOB ,'VICTOR',MSGCLASS=H                                     JOB07749
+         2 //STEP1 EXEC PGM=ASSIST,PARM='MACRO=F'                                  00000200
+         3 //STEPLIB DD DSN=KC02293.ASSIST.LOADLIB,DISP=SHR                        00000300
+         4 //SYSIN DD *                                                            00000400
+         5 //FT05F001 DD *                                                         00003500
+         6 //SYSPRINT DD SYSOUT=*                                                  00005000
+ ICH70001I KC03GFC  LAST ACCESS AT 17:03:25 ON THURSDAY, MARCH 23, 2017
+ IEF236I ALLOC. FOR KC03GFCA STEP1
+ IGD103I SMS ALLOCATED TO DDNAME STEPLIB
+ IEF237I JES2 ALLOCATED TO SYSIN
+ IEF237I JES2 ALLOCATED TO FT05F001
+ IEF237I JES2 ALLOCATED TO SYSPRINT
+ IEF142I KC03GFCA STEP1 - STEP WAS EXECUTED - COND CODE 0000
+ IGD104I KC02293.ASSIST.LOADLIB                       RETAINED,  DDNAME=STEPLIB 
+ IEF285I   KC03GFC.KC03GFCA.JOB07749.D0000101.?         SYSIN         
+ IEF285I   KC03GFC.KC03GFCA.JOB07749.D0000102.?         SYSIN         
+ IEF285I   KC03GFC.KC03GFCA.JOB07749.D0000103.?         SYSOUT        
+ IEF373I STEP/STEP1   /START 2017082.1706
+ IEF032I STEP/STEP1   /STOP  2017082.1706 
+         CPU:     0 HR  00 MIN  00.01 SEC    SRB:     0 HR  00 MIN  00.00 SEC    
+         VIRT:   584K  SYS:   268K  EXT:        0K  SYS:    11628K
+         ATB- REAL:                     0K  SLOTS:                     0K
+              VIRT- ALLOC:       0M SHRD:       0M
+ IEF375I  JOB/KC03GFCA/START 2017082.1706
+ IEF033I  JOB/KC03GFCA/STOP  2017082.1706 
+         CPU:     0 HR  00 MIN  00.01 SEC    SRB:     0 HR  00 MIN  00.00 SEC    
+1*** ASSIST 4.0/A2-05/15/82  470/V7A/0:OS/VS2  INS=SDFP7/X=BGHO, CHECK/TRC/=1180, OPTS=CDKMPR FROM PENN ST*NIU COMPSCI*LT         
+0MACRO=F                                                                                                                          
+0                                                                                                               PAGE    1         
+0  LOC  OBJECT CODE    ADDR1 ADDR2  STMT   SOURCE STATEMENT                                                                       
+                                       1 *******************************************************************     00000500         
+                                       2 *Victor Amaro                                                     *     00000600         
+                                       3 *Dr. Jim Leon                                                     *     00000700         
+                                       4 *CSCI 360, Section 2                                              *     00000800         
+                                       5 *TA: Grace                                                        *     00000900         
+                                       6 *z1747708                                                         *     00001000         
+                                       7 *Assignment 5: Create different routines.                         *     00001100         
+                                       8 *              One to build a table                               *     00001200         
+                                       9 *              One to print the table                             *     00001300         
+                                      10 *              One to print certain elements in the table         *     00001400         
+                                      11 *******************************************************************     00001500         
+ 000000                               12 MAIN    CSECT                                                           00001600         
+ 000000                               13         USING MAIN,R15                                                  00001700         
+ 000000 45D0 F014            00014    14         BAL R13,BUILD                               CALL BUILD ROUTINE  00001800         
+ 000004 E060 F086 0258 00086          15         XDUMP TABLE,600                             DUMP PUT TABLE      00001900         
+ 00000A 45D0 F30C            0030C    16         BAL R13,PRINT                               CALL PRINT ROUTINE  00001910         
+ 00000E 45D0 F3A8            003A8    17         BAL R13,CHECK                               CALL CHECK ROUTINE  00001920         
+ 000012 07FE                          18         BR R14                                      EXIT PROGRAM        00002000         
+                                      19 ***************************************************                     00002100         
+                                      20 *NAME: BUILD                                      *                     00002200         
+                                      21 *FUNCTION: BUILDS THE TABLE                       *                     00002300         
+                                      22 *REG USEAGE: R12 - TABLE PTR                      *                     00002400         
+                                      23 *            R13 - GO BACK TO MAIN                *                     00002500         
+                                      24 ***************************************************                     00002600         
+ 000014                               25 BUILD   DS 0H                                       BUILD STARTS HERE   00002700         
+ 000014 41C0 F086            00086    26         LA R12,TABLE                                POINT TO THE TABLE  00002800         
+                                      27 *                                                                       00002810         
+ 000018 E000 F036 0050 00036          28 DO      XREAD CARD,80                               READ REC            00002820         
+ 00001E 4740 F030            00030    29         BC B'0100',ENDDO                            CHECK FOR EOF       00002830         
+ 000022 D21F C000 F036 00000 00036    30         MVC 0(32,R12),CARD                          PUT NAME IN TABLE   00002831         
+ 000028 41CC 0020            00020    31         LA R12,32(R12)                              BUMP TABLE          00002832         
+ 00002C 47F0 F018            00018    32         B DO                                        BACK TO DO          00002833         
+ 000030 50C0 F308            00308    33 ENDDO   ST R12,EOT                                  SAVE EOT            00002840         
+ 000034 07FD                          34         BR R13                                      BACK TO MAIN        00002850         
+                                      35 ***************************************************                     00002900         
+                                      36 *               BUILD STORAGE                     *                     00002910         
+                                      37 ***************************************************                     00002920         
+ 000036 C3C1D9C4C3C1D9C4              38 CARD  DC 20CL4'CARD'                                80 BYTE CARD        00002921         
+ 000086 C5D5E3D9E8404040              39 TABLE DC 20CL32'ENTRY'                              TABLE               00002930         
+ 000308 FFFFFFFB                      40 EOT   DC F'-5'                                      EOT SAVED HERE      00002931         
+                                      41 *                                                                       00002940         
+                                      42 *                                                                       00002941         
+                                      43 ***************************************************                     00002950         
+                                      44 *NAME: PRINT                                      *                     00002960         
+                                      45 *FUNCTION: PRINTS THE TABLE                       *                     00002970         
+                                      46 *REG USEAGE: R12 - TABLE PTR                      *                     00002980         
+                                      47 *            R13 - BACK TO MAIN                   *                     00002981         
+                                      48 *            R10 - PLINE PTR                      *                     00002982         
+                                      49 *            R11 - HOLDS EOT                      *                     00002983         
+                                      50 ***************************************************                     00002991         
+ 00030C                               51 PRINT   DS 0H                                       PRINT STARTS HERE   00002992         
+ 00030C E020 F4E0 0018 004E0          52         XPRNT =CL24' ALL ENTRIES FROM TABLE',24     PRINT HEADER        00002993         
+1                                                                                                               PAGE    2         
+0  LOC  OBJECT CODE    ADDR1 ADDR2  STMT   SOURCE STATEMENT                                                                       
+ 000312 41C0 F086            00086    53         LA R12,TABLE                                RESET TABLE PTR     00002994         
+ 000316 41A0 F345            00345    54         LA R10,PLINE+1                            POINT TO PLINE+1      00002995         
+ 00031A 58B0 F308            00308    55         L  R11,EOT                                LOAD EOT INTO R11     00002996         
+ 00031E 19CB                          56 DO2     CR R12,R11                                END OF TABLE REACHED? 00002997         
+ 000320 4780 F342            00342    57         BE ENDDO2                                 IF YES, GO TO ENDDO2  00002998         
+ 000324 D21F F345 C000 00345 00000    58         MVC PLINE+1(32),0(R12)                    PULL NAME FROM TABLE  00002999         
+ 00032A 41CC 0020            00020    59         LA R12,32(R12)                              BUMP TABLE          00003000         
+ 00032E E020 F344 0064 00344          60         XPRNT PLINE,100                             PRINT THE NAME      00003001         
+ 000334 9240 F344      00344          61         MVI PLINE,C' '                            MOVE BLANK TO PLINE   00003002         
+ 000338 D262 F345 F344 00345 00344    62         MVC PLINE+1(99),PLINE                     CLEAR REST OF PLINE   00003003         
+ 00033E 47F0 F31E            0031E    63         B DO2                                       BACK TO TOP         00003004         
+ 000342 07FD                          64 ENDDO2  BR R13                                      BACK TO MAIN        00003005         
+                                      65 ***************************************************                     00003006         
+                                      66 *               PRINT STORAGE                     *                     00003007         
+                                      67 ***************************************************                     00003008         
+ 000344 4040404040404040              68 PLINE DC CL100' '                                   PLINE FOR NAMES     00003009         
+                                      69 *                                                                       00003010         
+                                      70 *                                                                       00003011         
+                                      71 ***************************************************                     00003012         
+                                      72 *NAME: CHECK                                      *                     00003013         
+                                      73 *FUNCTION: CHECKS FOR CERTAIN NAMES               *                     00003014         
+                                      74 *REG USEAGE: R12 - TABLE PTR                      *                     00003015         
+                                      75 *            R13 - BACK TO MAIN                   *                     00003016         
+                                      76 *            R11 - HOLDS THE EOT                  *                     00003017         
+                                      77 *            R9  - COUNT FOR '*'                  *                     00003018         
+                                      78 *            R8  - COUNT FOR 'ANDY'               *                     00003019         
+                                      79 *            R6  - TEMP NAME HOLDER FOR * SEARCH  *                     00003020         
+                                      80 *            R5  - CYCLE THROUGH CHAR COUNTER     *                     00003021         
+                                      81 ***************************************************                     00003022         
+ 0003A8                               82 CHECK   DS 0H                                       CHECK STARTS HERE   00003023         
+ 0003A8 E020 F51C 0002 0051C          83         XPRNT =CL2' ',2                             NEW LINE            00003024         
+ 0003AE E020 F51E 0017 0051E          84         XPRNT =CL23' FROM CHECK SUBROUTINE',23      PRINT HEADER        00003025         
+ 0003B4 41C0 F086            00086    85         LA R12,TABLE                                RESET TABLE PTR     00003026         
+ 0003B8 1B88                          86         SR R8,R8                                 ANDY COUNT TO ZERO     00003027         
+ 0003BA 1B99                          87         SR R9,R9                                 * COUNT TO ZERO        00003028         
+ 0003BC 59C0 F308            00308    88 DO3     C  R12,EOT                                  EOT REACHED?        00003030         
+ 0003C0 4780 F442            00442    89         BE ENDDO3                                   YES, TO ENDDO3      00003031         
+ 0003C4 4720 F4D4            004D4    90         BH DIE                                   SOMETHING WENT WRONG   00003040         
+ 0003C8 1B55                          91         SR R5,R5                                 CHAT COUNT TO ZERO     00003041         
+ 0003CA D21F F4B1 C000 004B1 00000    92         MVC TEMPNAME(32),0(R12)                  MOVE NAME INTO TEMP    00003042         
+ 0003D0 D503 F4B1 F4F8 004B1 004F8    93 IF      CLC TEMPNAME(4),=CL4'ANDY'               IS NAME ANDY?          00003050         
+ 0003D6 4770 F3F6            003F6    94         BNE REPLACE                              NO,GO TO REPLACE       00003060         
+ 0003DA E020 F4FC 000C 004FC          95         XPRNT =CL12' ANDY FOUND:',12             FOUND ANDY HEADER      00003062         
+ 0003E0 D21F F472 C000 00472 00000    96         MVC ANDYP+1(32),0(R12)                   MOVE NAME TO A PLINE   00003063         
+ 0003E6 E020 F471 0020 00471          97         XPRNT ANDYP,32                           PRINT PLINE(NAME)      00003064         
+ 0003EC E020 F51C 0002 0051C          98         XPRNT =CL2' ',2                          NEW LINE               00003065         
+ 0003F2 4188 0001            00001    99         LA R8,1(R8)                              ADD ONE TO ANDY COUNT  00003066         
+ 0003F6                              100 REPLACE DS 0H                                                           00003068         
+ 0003F6 4160 F4B1            004B1   101         LA  R6,TEMPNAME                          NAME INTO TEMP REG     00003069         
+ 0003FA 5950 F4D8            004D8   102 TOP     C R5,TT                                  CHECK FOR 33           00003071         
+ 0003FE 4780 F43A            0043A   103         BE ENDIF                                 REACHED? GO TO ENDIF   00003072         
+ 000402 4720 F4D4            004D4   104         BH DIE                                   SOMETING WENT WRONG    00003073         
+ 000406 955C 6000      00000         105 ELSEIF  CLI 0(R6),C'*'                           IS CHAR == *?          00003074         
+ 00040A 4770 F42E            0042E   106         BNE ENDIF1                               NO, GO TO ENDIF        00003075         
+ 00040E E020 F535 0009 00535         107         XPRNT =CL9' * FOUND:',9                  FOUND * HEADER         00003076         
+ 000414 D21F F492 F4B1 00492 004B1   108         MVC ASTP+1(32),TEMPNAME               MOVE NAME TO A PLINE      00003077         
+ 00041A E020 F491 0020 00491         109         XPRNT ASTP,32                            PRINT PLINE(NAME)      00003078         
+1                                                                                                               PAGE    3         
+0  LOC  OBJECT CODE    ADDR1 ADDR2  STMT   SOURCE STATEMENT                                                                       
+ 000420 E020 F51C 0002 0051C         110         XPRNT =CL2' ',2                          NEW LINE               00003079         
+ 000426 4199 0001            00001   111         LA R9,1(R9)                              ADD ONE TO * COUNTER   00003080         
+ 00042A 47F0 F43A            0043A   112         B ENDIF                                  GO TO ENDIF            00003081         
+ 00042E                              113 ENDIF1  DS 0H                                                           00003082         
+ 00042E 4166 0001            00001   114         LA R6,1(R6)                             CYCLE THROUGH THE NAME  00003083         
+ 000432 4155 0001            00001   115         LA R5,1(R5)                                 CHAR COUNTER        00003084         
+ 000436 47F0 F3FA            003FA   116         B TOP                                       BACK TO TOP         00003085         
+ 00043A 41CC 0020            00020   117 ENDIF   LA R12,32(R12)                              BUMP TABLE          00003086         
+ 00043E 47F0 F3BC            003BC   118         B DO3                                       BACK TO TOP         00003087         
+ 000442 E020 F53E 0017 0053E         119 ENDDO3  XPRNT =CL23' NUMBER OF ANDYS FOUND:',23     ANDY FOUND HEADER   00003088         
+ 000448 5280 F465            00465   120         XDECO R8,OUTPT                           PREPARE TO PRINT COUNT 00003089         
+ 00044C E020 F464 000D 00464         121         XPRNT PLINE2,13                             PRINT ANDY COUNT    00003090         
+ 000452 E020 F508 0014 00508         122         XPRNT =CL20' NUMBER OF *S FOUND:',20        * FOUND HEADER      00003091         
+ 000458 5290 F465            00465   123         XDECO R9,OUTPT                           PREPARE TO PRINT COUNT 00003092         
+ 00045C E020 F464 000D 00464         124         XPRNT PLINE2,13                             PRINT * COUNT       00003093         
+ 000462 07FD                         125         BR 13                                       BACK TO MAIN        00003094         
+                                     126 ***************************************************                     00003095         
+                                     127 *               CHECK STORAGE                     *                     00003096         
+                                     128 ***************************************************                     00003097         
+ 000464 40                           129 PLINE2 DC CL1' '                                    CARRIAGE CONTROL    00003098         
+ 000465 D6E4E3D7E3404040             130 OUTPT DC CL12'OUTPT'                                OUTPUT FOR COUNTS   00003099         
+ 000471 4040404040404040             131 ANDYP DC CL32' '                                    TO PRINT ANDY NAME  00003100         
+ 000491 4040404040404040             132 ASTP  DC CL32' '                                    TO PRINT * NAME     00003101         
+ 0004B1 4040404040404040             133 TEMPNAME DC CL32' '                                 TEMP LOC FOR NAME   00003102         
+ 0004D4 00000000                     134 DIE DC F'00'                                        ERROR CHECKING      00003103         
+ 0004D8 00000021                     135 TT DC F'33'                                                             00003104         
+                                     136 *                                                                       00003105         
+                                     137 *                                                                       00003106         
+ 00000F                              138 R15  EQU  15                                                            00003107         
+ 00000E                              139 R14  EQU  14                                                            00003110         
+ 00000D                              140 R13  EQU  13                                                            00003200         
+ 00000C                              141 R12  EQU  12                                                            00003210         
+ 00000B                              142 R11  EQU  11                                                            00003220         
+ 00000A                              143 R10  EQU  10                                                            00003230         
+ 000009                              144 R9   EQU   9                                                            00003240         
+ 000008                              145 R8   EQU   8                                                            00003250         
+ 000007                              146 R7   EQU   7                                                            00003251         
+ 000006                              147 R6   EQU   6                                                            00003252         
+ 000005                              148 R5   EQU   5                                                            00003253         
+                                     149      LTORG                                                              00003260         
+ 0004E0 40C1D3D340C5D5E3             150                =CL24' ALL ENTRIES FROM TABLE'                                            
+ 0004F8 C1D5C4E8                     151                =CL4'ANDY'                                                                
+ 0004FC 40C1D5C4E840C6D6             152                =CL12' ANDY FOUND:'                                                       
+ 000508 40D5E4D4C2C5D940             153                =CL20' NUMBER OF *S FOUND:'                                               
+ 00051C 4040                         154                =CL2' '                                                                   
+ 00051E 40C6D9D6D440C3C8             155                =CL23' FROM CHECK SUBROUTINE'                                             
+ 000535 405C40C6D6E4D5C4             156                =CL9' * FOUND:'                                                           
+ 00053E 40D5E4D4C2C5D940             157                =CL23' NUMBER OF ANDYS FOUND:'                                            
+                                     158      END                                                                00003300         
+0***  NO   STATEMENTS FLAGGED -  NO   WARNINGS,  NO   ERRORS                                                                      
+0*** DYNAMIC CORE AREA USED:  LOW:   12108 HIGH:    1292 LEAVING:  480168 FREE BYTES. AVERAGE:       84 BYTES/STMT ***            
+0*** ASSEMBLY TIME =    0.000 SECS,   159000 STATEMENTS/SEC ***                                                                   
+0*** PROGRAM EXECUTION BEGINNING - ANY OUTPUT BEFORE EXECUTION TIME MESSAGE IS PRODUCED BY USER PROGRAM ***                       
+0BEGIN XSNAP - CALL     1 AT D000000A USER STORAGE                                                                                
+1                             CORE ADDRESSES SPECIFIED-     000086 TO 0002DE                                                      
+ 000080   F0F0F4F8 F0F0C2D6 C2404040 404040E3    C8D6D4C1 E2404040 40404040 40404040   *004800BOB      THOMAS           *         
+ 0000A0   40404040 4040C1D5 C4E84040 404040D1    D6D9C4C1 D5404040 40404040 40404040   *      ANDY     JORDAN           *         
+ 0000C0   40404040 4040E3D6 D4404040 404040E3    C8D6D4D7 E2D6D540 40404040 40404040   *      TOM      THOMPSON         *         
+ 0000E0   40404040 40405CC9 D2C54040 404040E3    D9E4E2E3 40404040 40404040 40404040   *      .IKE     TRUST            *         
+ 000100   40404040 4040C1D4 C4E84040 404040D1    C5D5E2C1 E9404040 40404040 40404040   *      AMDY     JENSAZ           *         
+ 000120   40404040 4040E6C1 D3E34040 404040D1    C1C3D2E2 D6D55C40 40404040 40404040   *      WALT     JACKSON.         *         
+ 000140   40404040 40405CE3 D6D5E840 404040D7    C1D9D2C5 D9404040 40404040 40404040   *      .TONY    PARKER           *         
+ 000160   40404040 4040E2C1 D3D35CE8 404040E2    D4C9E3C8 40404040 40404040 40404040   *      SALL.Y   SMITH            *         
+ 000180   40404040 4040D4C9 D25C4040 404040D4    D6E4E2C5 40404040 40404040 40404040   *      MIK.     MOUSE            *         
+ 0001A0   40404040 4040E2C1 D5C4E840 404040D9    C1D5E3D6 E4D34040 40404040 40404040   *      SANDY    RANTOUL          *         
+ 0001C0   40404040 4040C1D5 C4E84040 404040D9    D6C7C5D9 E2404040 40404040 40404040   *      ANDY     ROGERS           *         
+ 0001E0   40404040 4040C1D5 C4E84040 404040C3    E4D95C5C 40404040 40404040 40404040   *      ANDY     CUR..            *         
+ 000200   40404040 4040D1D6 C5E84040 404040D3    C5E5C9D5 C5404040 40404040 40404040   *      JOEY     LEVINE           *         
+ 000220   40404040 4040C5D5 E3D9E840 40404040    40404040 40404040 40404040 40404040   *      ENTRY                     *         
+   LINES    000240-0002C0    SAME AS ABOVE                                                                                        
+0                                                                                                                                 
+ ALL ENTRIES FROM TABLE                                                                                                           
+ BOB      THOMAS                                                                                                                  
+ ANDY     JORDAN                                                                                                                  
+ TOM      THOMPSON                                                                                                                
+ *IKE     TRUST                                                                                                                   
+ AMDY     JENSAZ                                                                                                                  
+ WALT     JACKSON*                                                                                                                
+ *TONY    PARKER                                                                                                                  
+ SALL*Y   SMITH                                                                                                                   
+ MIK*     MOUSE                                                                                                                   
+ SANDY    RANTOUL                                                                                                                 
+ ANDY     ROGERS                                                                                                                  
+ ANDY     CUR**                                                                                                                   
+ JOEY     LEVINE                                                                                                                  
+                                                                                                                                  
+ FROM CHECK SUBROUTINE                                                                                                            
+ ANDY FOUND:                                                                                                                      
+ ANDY     JORDAN                                                                                                                  
+                                                                                                                                  
+ * FOUND:                                                                                                                         
+ *IKE     TRUST                                                                                                                   
+                                                                                                                                  
+ * FOUND:                                                                                                                         
+ WALT     JACKSON*                                                                                                                
+                                                                                                                                  
+ * FOUND:                                                                                                                         
+ *TONY    PARKER                                                                                                                  
+                                                                                                                                  
+ * FOUND:                                                                                                                         
+ SALL*Y   SMITH                                                                                                                   
+                                                                                                                                  
+ * FOUND:                                                                                                                         
+ MIK*     MOUSE                                                                                                                   
+                                                                                                                                  
+ ANDY FOUND:                                                                                                                      
+ ANDY     ROGERS                                                                                                                  
+                                                                                                                                  
+ ANDY FOUND:                                                                                                                      
+ ANDY     CUR**                                                                                                                   
+                                                                                                                                  
+ * FOUND:                                                                                                                         
+ ANDY     CUR**                                                                                                                   
+                                                                                                                                  
+ NUMBER OF ANDYS FOUND:                                                                                                           
+            3                                                                                                                     
+1NUMBER OF *S FOUND:                                                                                                              
+            6                                                                                                                     
+0*** EXECUTION TIME =    0.002 SECS.      2553 INSTRUCTIONS EXECUTED -  1276500 INSTRUCTIONS/SEC ***                              
+0*** AM004 - NORMAL USER TERMINATION BY RETURN ***                                                                                

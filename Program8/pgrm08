@@ -1,0 +1,322 @@
+//KC03GFCA JOB ,'VICTOR',MSGCLASS=H                                     00000100
+//STEP1 EXEC PGM=ASSIST,PARM='MACRO=F'                                  00000200
+//STEPLIB DD DSN=KC02293.ASSIST.LOADLIB,DISP=SHR                        00000300
+//SYSIN DD *                                                            00000400
+*******************************************************************     00000500
+*Victor Amaro                                                     *     00000600
+*CSCI 360, Section 2                                              *     00000700
+*TA: Grace                                                        *     00000800
+*z1747708                                                         *     00000900
+*Assignment 8: Produce a sales report                             *     00001000
+*******************************************************************     00001400
+TAB     DSECT                                                           00001410
+$TTOTAL  DS  F        BINARY FULLWORD OF TOTAL ORDER                    00001420
+$TPID    DS  CL6      PROD ID CHAR                                      00001430
+$TPRICE  DS  PL4      PRICE PACKED                                      00001440
+$TQUAN   DS  PL4      QUANT PACKED                                      00001450
+$TDISC   DS  PL3      DISC PACKED                                       00001460
+$TFILLER DS  CL11     FILL OUT DSECT                                    00001470
+*                                                                       00001480
+*                                                                       00001490
+MAIN    CSECT                                                           00001500
+        STM R14,R12,12(R13)                     SAVE CALLERS REGS       00001600
+        LR R12,R15                              POINT 12 AT BUILD       00001700
+        USING MAIN,R12                          SET BASE REG FOR MAIN   00001800
+        USING TAB,R11                           SET BASE REG FOR TAB    00001810
+        LA R14,MSAVE                            POINT TO MSAVE AREA     00001900
+        ST R14,8(R13)                           SET FORWARD PTR         00002000
+        ST R13,4(R14)                           SET BACK PTR            00002100
+        LR R13,R14                              R13 IS AT MSAVE         00002200
+***                                                                     00002300
+        LA R1,BDLIST                            POINT R1 AT BDLIST      00002310
+        L  R15,=V(BUILD)                        R15 POINTS TO SUB       00002311
+        BALR R14,R15                            GO TO SUB,R14 IS RETURN 00002312
+        XDUMP TABLE,700                         DUMP OUT TABLE          00002320
+*                                                                       00002400
+        LA R1,PRTLIST                           POINT R1 AT PRTLIST     00002410
+        L  R15,=V(PRINT)                        R15 POINTS TO SUB       00002420
+        BALR R14,R15                            GO TO SUB,R14 IS RETURN 00002430
+*                                                                       00002440
+        LA R1,FNDLIST                           POINT R1 AT FNDLIST     00002441
+        L  R15,=V(FIND)                         R15 POINTS TO SUB       00002442
+        BALR R14,R15                            GO TO SUB,R14 IS RETURN 00002443
+***                                                                     00002450
+        L  R13,4(R13)                           GET OUT BACK PTR        00002500
+        LM R14,R12,12(R13)                      RESTORE REGS            00002600
+        DROP R11                                                        00002610
+        BR R14                                  RETURN LINKAGE          00002700
+******************************************************************      00002800
+*                     MAIN STORAGE                               *      00002900
+******************************************************************      00003000
+MSAVE   DC 18F'-1'                                 MAIN SAVE AREA       00003100
+PAD     DC CL66'PAD'                                                    00003111
+        ORG MAIN+((*-MAIN+31)/32*32)                                    00003112
+TABLE   DC 20CL32'HERE  IS ENTRY'                  TABLE                00003113
+EOT     DC F'-5'                                   EOT SAVED HERE       00003114
+BDLIST  DC A(TABLE,EOT)                            BUILD PARAMETER LIST 00003120
+PRTLIST DC A(TABLE,EOT)                            PRINT PARAMETER LIST 00003130
+FNDLIST DC A(TABLE,EOT)                            FIND PARAMETER LIST  00003140
+        LTORG                                                           00003200
+*                                                                       00003201
+*                                                                       00003202
+*******************************************************************     00003210
+*NAME: BUILD                                                      *     00003220
+*FUNCTION: BUILDS THE TABLE                                       *     00003230
+*REGS: R2 - TABLE POINTER                                         *     00003240
+*      R3 - USED TO STORE EOT                                     *     00003250
+*      R11 - DSECT BASE REG                                       *     00003260
+*******************************************************************     00003300
+BUILD   CSECT                                    BUILD STARTS HERE      00003310
+        STM R14,R12,12(R13)                      SAVE CALLERS REGS      00003320
+        LR R12,R15                               POINT 12 AT BUILD      00003330
+        USING BUILD,R12                          SET BASE REG           00003340
+        LA R14,BSAVE                             POINT TO BSAVE AREA    00003350
+        ST R14,8(R13)                            SET FORWARD PTR        00003360
+        ST R13,4(R14)                            SET BACK PTR           00003370
+        LR R13,R14                               R13 IS AT BSAVE        00003380
+        LM R2,R3,0(R1)                           BRING IN PARMS         00003390
+***                                                                     00003400
+        LA R11,0(R2)                             OVERLAY DSECT          00003401
+        USING TAB,R11                            SET DSECT BASE REG     00003402
+TOP     DS 0H                                    START OF TOP LOOP      00003403
+        XREAD CARD,80                            READ REC               00003404
+        BC B'0100',END                           CHECK FOR EOF          00003405
+        MVC $TPID(6),INPROD                      BRING IN PROD ID       00003406
+        PACK $TPRICE(4),INPRICE(4)               BRING IN PROD PRICE    00003407
+        PACK $TQUAN(4),INQUAN(3)                 BRING IN PROD QUAN     00003408
+        PACK $TDISC(3),INDISC(4)                 BRING IN PROD DISCOUNT 00003409
+        ZAP OUTT(8),$TPRICE(4)                   TOTAL PRICE            00003410
+        MP  OUTT(8),$TQUAN(4)                    PRICE * QUANITY        00003411
+        SP  OUTT(8),$TDISC(3)                    TOTAL - DISCOUNT       00003412
+        AP OUTT(8),=PL2'500'                     TOTAL + 5              00003413
+        CVB R4,OUTT                              TO BINARY              00003415
+        ST R4,$TTOTAL                            STORE TOTAL COST       00003416
+        LA R11,32(R11)                           BUMP TABLE             00003417
+        B TOP                                    BACK TO TOP            00003418
+END     DS 0H                                    END OF ENDDO           00003419
+        ST R11,0(R3)                             SAVE EOT               00003420
+        DROP R11                                 DROP                   00003421
+***                                                                     00003422
+        L  R13,4(R13)                            GET OUT BACK PTR       00003423
+        LM R14,R12,12(R13)                       RESTORE REGS           00003430
+        BR R14                                   GO BACK TO MAIN        00003440
+*******************************************************************     00003450
+*                     BUILD STORAGE                               *     00003460
+*******************************************************************     00003470
+OUTPRI  DC PL8'0'                               OUT PRODUCT             00003471
+OUTDIS  DC PL6'0'                               OUT DISCOUNT            00003472
+OUTQTY  DC PL8'0'                               OUT QUANITY             00003473
+        DS 0D                                                           00003474
+OUTT    DC PL8'0'                               TOTAL PRICE OUT         00003475
+CARD    DS 0CL80                                80 BYTE CARD            00003480
+INPROD  DC CL6'PROD'                            PRODUCT ID              00003481
+INPRICE DC CL4'PRIC'                            PRODUCT PRICE           00003482
+INQUAN  DC CL3'QTY'                             PRODUCT QUANTITY        00003483
+INDISC  DC CL4'DIS'                             PRODUCT DISCOUNT        00003484
+PADD    DC CL63'PADD'                           PADD                    00003485
+BSAVE   DC 18F'-1'                              BUILD SAVE AREA         00003490
+        LTORG                                                           00003491
+*                                                                       00003492
+*                                                                       00003493
+*******************************************************************     00003494
+*NAME: PRINT                                                      *     00003495
+*FUNCTION: PRINT THE TABLEE                                       *     00003496
+*REGS: R2 - TABLE POINTER/TAB DESECT                              *     00003497
+*      R3 - EOT                                                   *     00003498
+*      R7 - HOLDS TOTAL                                           *     00003499
+*******************************************************************     00003501
+PRINT   CSECT                                    PRINT STARTS HERE      00003502
+        STM R14,R12,12(R13)                      SAVE CALLERS REGS      00003503
+        LR R12,R15                               POINT 12 AT BUILD      00003504
+        USING PRINT,R12                          SET BASE REG           00003505
+        LA R14,PSAVE                             POINT TO BSAVE AREA    00003506
+        ST R14,8(R13)                            SET FORWARD PTR        00003507
+        ST R13,4(R14)                            SET BACK PTR           00003508
+        LR R13,R14                               R13 IS AT BSAVE        00003509
+        LM R2,R3,0(R1)                           BRING IN PARMS         00003510
+***                                                                     00003511
+        USING TAB,R2                             SET DSECT BASE REG     00003513
+        SP SALES(2),SALES(2)                     COUNTER TO ZERO        00003514
+        SP TOTAL(6),TOTAL(6)                     COUNTER TO ZERO        00003515
+        L R3,0(R3)                               BRING IN EOT           00003516
+        XPRNT =CL2' ',2                          NEW LINE               00003517
+        XPRNT =CL13' PRINT OUTPUT',13            PRINT HEADER           00003518
+        XPRNT PLINE,52                           OBJECT HEADER          00003520
+DO      DS 0H                                    START OF DO LOOP       00003521
+        CR R2,R3                                 EOT REACHED?           00003522
+        BE ENDDO                                 YES, GO TO ENDDO       00003523
+        BH DIE                                   ERROR                  00003524
+        MVC PLINE2+1(6),$TPID                    PROD ID TO PLINE       00003525
+*                                                                       00003526
+        MVC PLINE2+7(9),=XL9'4020202020204B2020' PROD PRICE PATTERN     00003527
+        ED PLINE2+7(9),$TPRICE                   PROD PRICE TO PLINE    00003528
+*                                                                       00003529
+        MVC PLINE2+16(8),=XL8'4020202020202020'  QUANTIY PATTERN        00003530
+        ED PLINE2+16(8),$TQUAN                   QUANITY TO PLINE       00003531
+*                                                                       00003532
+        MVC PLINE2+25(5),=XL5'40214B2020'        SHIPPING PATTERN       00003533
+        ED PLINE2+25(5),SHIP                     SHIPPING TO PLINE      00003534
+*                                                                       00003535
+        MVC PLINE2+34(6),=XL6'402021204B2020'    DISCOUNT PATTERN       00003536
+        ED PLINE2+34(6),$TDISC                   DISCOUNT TO PLINE      00003537
+*                                                                       00003538
+        L R7,$TTOTAL                             BRING IN TOTAL         00003539
+        CVD R7,OUTTL                             TO BINARY              00003540
+        ZAP OUT(6),OUTTL(8)                      ZAP TO SMALLER FIELD   00003541
+        MVC PLINE2+41(14),=XL14'402020202020206B2020204B2020'           00003542
+        ED PLINE2+41(14),OUT                     TOTAL TO PLINE         00003543
+*                                                                       00003544
+        XPRNT PLINE2,100                         PRINT PLINE2           00003545
+        LA R2,32(R2)                             BUMP TABLE             00003546
+        AP SALES(2),=PL2'1'                      ADD ONE TO TOTAL SALES 00003547
+        AP TOTAL(6),OUT(6)                       GRAND TOTAL COUNTER    00003548
+        B DO                                     BACK UP TO DO          00003549
+ENDDO   DS 0H                                    END OF DO LOOP         00003550
+        XPRNT =CL17' NUMBER OF SALES:',17        HEADER NUM SALES       00003551
+        MVC PLINE3+1(4),=XL4'40202020'           NUM SALES PATTERN      00003552
+        ED PLINE3+1(4),SALES                     NUM SALES TO PLINE     00003553
+        XPRNT PLINE3,100                         PRINT NUM SALES        00003554
+*                                                                       00003555
+        XPRNT =CL21' TOTAL OF ALL SALES:',21     HEADER TOTAL SALES     00003556
+        MVC PLINE3+1(14),=XL14'402020202020206B2020204B2020' PATTERN    00003557
+        ED PLINE3+1(14),TOTAL                    TOTAL TO PLINE         00003558
+        XPRNT PLINE3,100                         PRINT TOTAL SALES      00003559
+*                                                                       00003560
+        XPRNT =CL20' AVERAGE SALE COST:',20      AVERAGE COST HEADER    00003561
+        MVI PLINE3,C' '                          MOVE BLANK TO PLINE    00003562
+        MVC PLINE3+1(99),PLINE3                  CLEAR REST OF PLINE    00003563
+        DP TOTAL(6),SALES(2)                     FIND AVERAGE COST      00003564
+        MVC PLINE3+1(10),=XL10'4020206B2020204B2020' PATTERN            00003565
+        ED PLINE3+1(10),TOTAL                    AVERAGE TO PLINE       00003566
+        XPRNT PLINE3,100                         PRINT AVGERAGE         00003567
+        DROP R2                                                         00003568
+***                                                                     00003569
+        L  R13,4(R13)                            GET OUT BACK PTR       00003570
+        LM R14,R12,12(R13)                       RESTORE REGS           00003571
+        BR R14                                   GO BACK TO MAIN        00003572
+*******************************************************************     00003573
+*                     PRINT STORAGE                               *     00003574
+*******************************************************************     00003575
+       DS 0D                                                            00003576
+OUTTL  DC PL8'0'                                  TOTAL PRICE           00003577
+SHIP   DC PL2'500'                                SHIPPING COST         00003578
+OUT    DC PL6'0'                                  SMALLER FIELD OUTTL   00003579
+TOTAL  DC PL6'0'                                  TOTAL SALES           00003580
+SALES  DC PL2'0'                                  NUM SALES             00003581
+PSAVE  DC 18F'-1'                                 PRINT SAVE AREA       00003582
+DIE    DC F'00'                                   SAFTEY CHECK VAR      00003583
+PLINE  DC CL1' '                                                        00003584
+       DC CL51'PRODUCT   PRICE   QTY   SHIPPING   DISCOUNT   TOTAL'     00003585
+PLINE2 DC CL100' TEMP'                            PRODUCT INFO          00003586
+PLINE3 DC CL100'TEMP'                             SUMMARY REPORT        00003587
+       LTORG                                                            00003588
+*                                                                       00003589
+*                                                                       00003590
+*******************************************************************     00003591
+*NAME: BUILD                                                      *     00003592
+*FUNCTION: BUILDS THE TABLE                                       *     00003593
+*REGS: R2 - TABLE POINTER/TAB DESECT                              *     00003594
+*      R3 - EOT                                                   *     00003595
+*      R7 - HOLD TOTAL                                            *     00003596
+*******************************************************************     00003597
+FIND    CSECT                                    FIND STARTS HERE       00003598
+        STM R14,R12,12(R13)                      SAVE CALLERS REGS      00003599
+        LR R12,R15                               POINT 12 AT BUILD      00003600
+        USING FIND,R12                           SET BASE REG           00003601
+        LA R14,FSAVE                             POINT TO FSAVE AREA    00003602
+        ST R14,8(R13)                            SET FORWARD PTR        00003603
+        ST R13,4(R14)                            SET BACK PTR           00003604
+        LR R13,R14                               R13 IS AT BSAVE        00003605
+        LM R2,R3,0(R1)                           BRING IN PARMS         00003606
+***                                                                     00003607
+        USING TAB,R2                             SET DSECT BASE REG     00003608
+        L R3,0(R3)                               BRING IN EOT           00003609
+        XPRNT =CL2' ',2                          NEW LINE               00003610
+        XPRNT =CL26' FIND OUTPUT: SALES >=500',26 FIND HEADER           00003611
+        XPRNT PLINE4,52                          OBJECT HEADER          00003612
+DO2     DS 0H                                    START OF DO2 LOOP      00003613
+        CR R2,R3                                 EOT REACHED?           00003614
+        BE ENDDO2                                YES, GO TO ENDDO2      00003615
+        BH DIEF                                  ERROR                  00003616
+        L R7,$TTOTAL                             BRING IN TOTAL         00003617
+        CVD R7,CPTTL                             TO BINARY              00003618
+        ZAP OUTTTL(6),CPTTL(8)                   MOVE TO SMALLER FIELD  00003619
+IF      DS 0H                                    START OF IT            00003620
+        CP OUTTTL,=PL4'50000'                    SALE TOTAL >= 500?     00003623
+        BL NEXT                                  NOPE, TO TO NEXT       00003624
+        MVC PLINE5+1(6),$TPID                    PROD ID TO PLINE       00003625
+*                                                                       00003626
+        MVC PLINE5+7(9),=XL9'4020202020204B2020' PROD PRICE PATTERN     00003627
+        ED PLINE5+7(9),$TPRICE                   PROD PRICE TO PLINE    00003628
+*                                                                       00003629
+        MVC PLINE5+16(8),=XL8'4020202020202020'  QUANTIY PATTERN        00003630
+        ED PLINE5+16(8),$TQUAN                   QUANITY TO PLINE       00003631
+*                                                                       00003632
+        MVC PLINE5+25(5),=XL5'40214B2020'        SHIPPING PATTERN       00003633
+        ED PLINE5+25(5),SHIPF                    SHIPPING TO PLINE      00003634
+*                                                                       00003635
+        MVC PLINE5+34(6),=XL6'402021204B2020'    DISCOUNT PATTERN       00003636
+        ED PLINE5+34(6),$TDISC                   DISCOUNT TO PLIME      00003637
+*                                                                       00003638
+        L R7,$TTOTAL                             BRING IN TOTAL         00003639
+        CVD R7,OUTLF                             TO BINARY              00003640
+        ZAP OUTF(6),OUTLF(8)                     ZAP TO SMALLER FIELD   00003641
+        MVC PLINE5+41(14),=XL14'402020202020206B2020204B2020'           00003642
+        ED PLINE5+41(14),OUTF                    TOTAL TO PLINE         00003643
+*                                                                       00003644
+        XPRNT PLINE5,100                                                00003645
+        B NEXT                                   GO TO NEXT             00003646
+NEXT    LA R2,32(R2)                             BUMP TABLE             00003647
+        B DO2                                    BACK UP TO DO2         00003648
+ENDDO2  DS 0H                                    END OF DO2 LOOP        00003649
+        XPRNT =CL2' ',2                          NEW LINE               00003650
+        DROP R2                                                         00003651
+***                                                                     00003652
+        L  R13,4(R13)                            GET OUT BACK PTR       00003653
+        LM R14,R12,12(R13)                       RESTORE REGS           00003654
+        BR R14                                   GO BACK TO MAIN        00003655
+*******************************************************************     00003656
+*                     FIND STORAGE                                *     00003657
+*******************************************************************     00003658
+FSAVE  DC 18F'-1'                                 PRINT SAVE AREA       00003659
+DIEF   DC F'00'                                   SAFTEY CHECK VAR      00003660
+       DS 0D                                                            00003661
+CPTTL  DC PL8'0'                                  TOTAL PRICE           00003662
+OUTTTL DC PL6'0'                                  SMALLER FIELD CPTTL   00003663
+SHIPF  DC PL2'500'                                SHIPPING COST         00003664
+       DS 0D                                                            00003665
+OUTLF  DC PL8'0'                                  TOTAL PRICE           00003666
+OUTF   DC PL6'0'                                  SMALLER FIELD OUTTL   00003667
+PLINE4 DC CL1' '                                                        00003668
+       DC CL51'PRODUCT   PRICE   QTY   SHIPPING   DISCOUNT   TOTAL'     00003669
+PLINE5 DC CL100'TEMP'                             PRODUCT INFO          00003670
+*                                                                       00003671
+*                                                                       00003672
+R15  EQU  15                                                            00003673
+R14  EQU  14                                                            00003680
+R13  EQU  13                                                            00003700
+R12  EQU  12                                                            00003800
+R11  EQU  11                                                            00003900
+R10  EQU  10                                                            00004000
+R9   EQU  9                                                             00004100
+R8   EQU  8                                                             00004200
+R7   EQU  7                                                             00004300
+R6   EQU  6                                                             00004400
+R5   EQU  5                                                             00004500
+R4   EQU  4                                                             00004600
+R3   EQU  3                                                             00004700
+R2   EQU  2                                                             00004800
+R1   EQU  1                                                             00004900
+     END                                                                00004910
+/*                                                                      00005000
+//FT05F001 DD *                                                         00005100
+XK445412950010100                                                       00005200
+RA650814950680500                                                       00005300
+TJ480616952440000                                                       00005400
+JY763409950221000                                                       00005500
+UT753411500121000                                                       00005600
+ZA535359950657500                                                       00005700
+GY718901000020000                                                       00005800
+YP441999503005000                                                       00005900
+/*                                                                      00006000
+//SYSPRINT DD SYSOUT=*                                                  00006100

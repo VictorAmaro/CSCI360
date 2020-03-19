@@ -1,0 +1,270 @@
+//KC03GFCA JOB ,'VICTOR',MSGCLASS=H                                     00000100
+//STEP1 EXEC PGM=ASSIST,PARM='MACRO=F'                                  00000200
+//STEPLIB DD DSN=KC02293.ASSIST.LOADLIB,DISP=SHR                        00000300
+//SYSIN DD *                                                            00000400
+*******************************************************************     00000500
+*Victor Amaro                                                     *     00000600
+*CSCI 360, Section 2                                              *     00000700
+*TA: Grace                                                        *     00000800
+*z1747708                                                         *     00000900
+*Assignment 7: Create different routines.                         *     00001000
+*              One to build a table                               *     00001100
+*              One to print the table                             *     00001200
+*              One to print even nums in the table                *     00001300
+*******************************************************************     00001400
+MAIN    CSECT                                                           00001500
+        STM R14,R12,12(R13)                      SAVE CALLERS REGSKAGE  00001501
+        LR R12,R15                               POINT 12 AT BUILD      00001502
+        USING MAIN,R12                           SET BASE REG           00001503
+        LA R14,MSAVE                             POINT TO MSAVE AREA    00001504
+        ST R14,8(R13)                            SET FORWARD PTR        00001505
+        ST R13,4(R14)                            SET BACK PTR           00001506
+        LR R13,R14                               R13 IS AT MSAVE        00001507
+***                                                                     00001508
+        LA R1,BDLIST                            POINT R1 AT BDLIST      00001509
+        L  R15,=V(BUILD)                        R15 POINTS TO SUB       00001510
+        BALR R14,R15                            GO TO SUB,R14 IS RETURN 00001511
+        XDUMP TABLE,600                         DUMP OUT TABLE          00001512
+*                                                                       00001513
+        LA R1,PRTLIST                           POINT R1 AT PRTLIST     00001515
+        L  R15,=V(PRINT)                        R15 POINTS TO SUB       00001517
+        BALR R14,R15                            GO TO SUB,R14 IS RETURN 00001518
+*                                                                       00001519
+        LA R4,3                                 LOAD R4 WITH 3          00001520
+        ST R4,COUNT                             STORE R4 INTO COUNT     00001521
+        LA R1,EVNLIST                           POINT R1 AT EVNLIST     00001523
+        L  R15,=V(EVEN)                         R15 POINTS TO SUB       00001524
+        BALR R14,R15                            GO TO SUB,R14 IS RETURN 00001525
+*                                                                       00001526
+        LA R4,4                                 LOAD R4 WITH 4          00001530
+        ST R4,COUNT                             STORE R4 INTO COUNT     00001531
+        LA R1,EVNLIST                           POINT R1 AT EVNLIST     00001532
+        L  R15,=V(EVEN)                         R15 POINTS TO SUB       00001533
+        BALR R14,R15                            GO TO SUB,R14 IS RETURN 00001534
+***                                                                     00001535
+        L  R13,4(R13)                           GET OUT BACK PTR        00001536
+        LM R14,R12,12(R13)                      RESTORE REGS            00001537
+        BR 14                                   RETURN LINKAGE          00001538
+*******************************************************************     00001539
+*                      MAIN STORAGE                               *     00001540
+*******************************************************************     00001541
+MSAVE   DC 18F'-1'                                 MAIN SAVE AREA       00001542
+TABLE   DC 50F'-15'                                TABLE                00001550
+EOT     DC F'-5'                                   EOT SAVED HEREE      00001560
+COUNT   DC F'-15'                                  NUMS PER LINE        00001570
+BDLIST  DC A(TABLE,EOT)                            BUILD PARAMETER LIST 00001580
+PRTLIST DC A(TABLE,EOT)                            PRINT PARAMETER LIST 00001590
+EVNLIST DC A(TABLE,EOT,COUNT)                      EVEN PARAMETER LIST  00001591
+        LTORG                                                           00001592
+*                                                                       00001593
+*                                                                       00001594
+*******************************************************************     00001595
+*NAME: BUILD                                                      *     00001596
+*FUNCTION: BUILDS THE TABLE                                       *     00001597
+*REGS: R2 - TABLE POINTER                                         *     00001598
+*      R3 - HOLDS EOT                                             *     00001599
+*      R11 - HOLD ENTRY FROM CARD                                 *     00001600
+*******************************************************************     00001601
+BUILD   CSECT                                    BUILD STARTS HERE      00001602
+        STM R14,R12,12(R13)                      SAVE CALLERS REGS      00001603
+        LR R12,R15                               POINT 12 AT BUILD      00001604
+        USING BUILD,R12                          SET BASE REG           00001605
+        LA R14,BSAVE                             POINT TO BSAVE AREA    00001606
+        ST R14,8(R13)                            SET FORWARD PTR        00001607
+        ST R13,4(R14)                            SET BACK PTR           00001608
+        LR R13,R14                               R13 IS AT BSAVE        00001609
+        LM R2,R3,0(R1)                           BRING IN PARMS         00001610
+**                                                                      00001611
+DO      DS 0H                                    START OF DO LOOP       00001612
+        XREAD CARD,80                            READ REC               00001613
+        BC B'0100',ENDDO                         CHECK FOR EOF          00001614
+        XDECI R11,CARD                           GET FIRST NUM          00001615
+        ST R11,0(R2)                             PUT INTO TABLE         00001616
+        LA R2,4(R2)                              GO TO NEXT ENTRY       00001617
+        B DO                                     GO TO TOP OF LOOP      00001618
+ENDDO   DS 0H                                    END OF DO LOOP         00001619
+        ST R2,0(R3)                              SAVE EOT               00001620
+**                                                                      00001621
+        L  R13,4(R13)                            GET OUT BACK PTR       00001622
+        LM R14,R12,12(R13)                       RESTORE REGS           00001623
+        BR R14                                   GO BACK TO MAIN        00001624
+*******************************************************************     00001625
+*                     BUILD STORAGE                               *     00001626
+*******************************************************************     00001627
+CARD  DC 20CL4'CARD'                            80 BYTE CARD            00001628
+BSAVE DC 18F'-1'                                BUILD SAVE AREA         00001629
+      LTORG                                                             00001630
+*                                                                       00001631
+*                                                                       00001632
+*******************************************************************     00001633
+*NAME: PRINT                                                      *     00001634
+*FUNCTION: PRINTS OUT THE WHOLE TABLE                             *     00001635
+*REGS: R2 - TABLE PTR                                             *     00001636
+*      R3 - HOLDS EOT                                             *     00001637
+*      R8 - ELEMENT COUNTER                                       *     00001638
+*      R11 - HOLDS ENTRY FROM TABLE                               *     00001639
+*                                                                 *     00001640
+*******************************************************************     00001641
+PRINT   CSECT                                    PRINT STARTS HERE      00001642
+        STM R14,R12,12(R13)                      SAVE CALLERS REGS      00001643
+        LR R12,R15                               POINT 12 AT BUILD      00001644
+        USING PRINT,R12                          SET BASE REG           00001645
+        LA R14,PSAVE                             POINT TO BSAVE AREA    00001646
+        ST R14,8(R13)                            SET FORWARD PTR        00001647
+        ST R13,4(R14)                            SET BACK PTR           00001648
+        LR R13,R14                               R13 IS AT BSAVE        00001649
+        LM R2,R3,0(R1)                           BRING IN PARMS         00001650
+**                                                                      00001651
+        XPRNT =CL18' NUMBERS IN TABLE:',18       PRINT HEADER           00001652
+        SR R8,R8                                 ELEMENT COUNTER TO 0   00001653
+        L R3,0(R3)                               BRING IN EOT           00001654
+DO2     DS 0H                                    START OF DO2 LOOP      00001655
+        CR R2,R3                                 EOT REACHED?           00001656
+        BE ENDDO2                                YES, GO TO DONE1       00001657
+        BH DIE                                   ERROR                  00001658
+        L R11,0(R2)                              PUT ENTRY INTO R11     00001659
+        XDECO R11,OUTPT                      PREPARE TO PRINT THE COUNT 00001660
+        XPRNT PLINE,13                           PRINT ENTRY            00001661
+        LA R2,4(R2)                              GO TO NEXT ENTRY       00001662
+        LA R8,1(R8)                               ADD ONE TO COUNTER    00001663
+        B DO2                                     BACK TO DO2           00001664
+ENDDO2  DS 0H                                     END OF DO2 LOOP       00001665
+        XPRNT =CL20' NUMBER OF ENTRIES:',20       COUNT HEADER          00001666
+        XDECO R8,OUTPT2                     PREPARE TO PRINT THE COUNT  00001667
+        XPRNT PLINE2,13                           PRINT THE COUNTER     00001668
+**                                                                      00001669
+        L  R13,4(R13)                             GET OUT BACK PTR      00001670
+        LM R14,R12,12(R13)                        RESTORE REGS          00001671
+        BR R14                                    GO BACK TO MAIN       00001672
+*******************************************************************     00001673
+*                     PRINT STORAGE                               *     00001674
+*******************************************************************     00001675
+PSAVE  DC 18F'-1'                                 PRINT SAVE AREA       00001676
+DIE    DC F'00'                                   SAFTEY CHECK VAR      00001677
+PLINE  DC CL1' '                                   PLINE FOR NUMBERS    00001678
+OUTPT  DC CL12'OUTPT'                              OUTPUT FOR ENTRY     00001679
+PLINE2 DC CL1' '                                  PLINE FOR COUNTER     00001680
+OUTPT2 DC CL12'OUTPT'                             OUTPUT FOR COUNTER    00001681
+       LTORG                                                            00001682
+*                                                                       00001683
+*                                                                       00001684
+*******************************************************************     00001685
+*NAME: EVEN                                                       *     00001686
+*FUNCTION: PRINTS OUT THE EVEN NUMBERS                            *     00001687
+* REGS: R2 - TABLE POINTER                                        *     00001688
+*       R3 - HOLDS EOT                                            *     00001689
+*       R4 - HOLDS HOW MNAY #S PER LINE DESIRED                   *     00001690
+*       R7 - COUNTER FOR #S PER LINE                              *     00001691
+*       R8 - COUNTER FOR EVEN #S                                  *     00001692
+*       R6 - PLINE3 POINTER PER LINE                              *     00001693
+*       R9 - HOLDS VAL FROM ENTRY (TO PUT OUT ON PLINE3)          *     00001694
+*       R10 - USED FOR R11 MATH                                   *     00001695
+*       R11 - HOLDS VAL FROM TABLE (TO DO MATH ON)                *     00001696
+*******************************************************************     00001698
+EVEN    CSECT                                    EVEN STARTS HERE       00001699
+        STM R14,R12,12(R13)                      SAVE CALLERS REGS      00001700
+        LR R12,R15                               POINT 12 AT BUILD      00001701
+        USING EVEN,R12                           SET BASE REG           00001702
+        LA R14,ESAVE                             POINT TO BSAVE AREA    00001703
+        ST R14,8(R13)                            SET FORWARD PTR        00001704
+        ST R13,4(R14)                            SET BACK PTR           00001705
+        LR R13,R14                               R13 IS AT BSAVE        00001706
+        LM R2,R4,0(R1)                           BRING IN PARMS         00001707
+**                                                                      00001708
+        SR R8,R8                                 EVEN COUNTER TO 0      00001711
+        SR R7,R7                                 PER LINE CNT TO 0      00001712
+        L R3,0(R3)                               BRING IN EOT           00001713
+        L R4,0(R4)                               BRING IN PER LINE CNT  00001714
+        LA R6,PLINE3+1                           POINT TO PLINE+1       00001715
+        XPRNT =CL2'  ',2                         NEW LINE               00001716
+        XPRNT =CL23' EVEN NUMBERS IN TABLE:',23  PRINT HEADER           00001717
+        XDECO R4,OUTPT5                          PER LINE TO PRINT      00001718
+        XPRNT PLINE5,29                          PRINT PER LINE HEADER  00001719
+DO3     DS 0H                                    START OF DO3 LOOP      00001720
+        CR R2,R3                                 EOT REACHED?           00001721
+        BE ENDDO3                                YES, GO TO DONE4       00001722
+        BH DIE2                                  ERROR                  00001723
+        L R11,0(R2)                              PUT ENTRY INTO R11     00001724
+        M R10,ONE                                PREPARE TO DIVIDE      00001725
+        D R10,TWO                                DIVIDE BY 2            00001726
+IF      LTR R10,R10                              CHECK FOR EVEN NUMBER  00001727
+        BNZ ENDIF                                NOT EVEN,TO ENDIF      00001728
+        LA R8,1(R8)                              ADD ONE TO COUNTER     00001729
+        L R9,0(R2)                        GET NUM OUT OF TABLE INTO R9  00001730
+        XDECO R9,0(R6)                           PUT NUM OUT ON PLINE   00001731
+        LA R6,12(R6)                             BUMP PLINE PTR BY 12   00001732
+        LA R7,1(R7)                              ADD ONE TO PLINE COUT  00001733
+IF2     CR R7,R4                        HAS PER LINE COUNT BEEN REACHED 00001734
+        BNE ENDIF                                NOT EQUAL,TO END IF    00001735
+        XPRNT PLINE3,100                         PRINTOUT LINE          00001736
+        SR R7,R7                                 RESET PLINE COUNT      00001737
+        MVI PLINE3,C' '                      MOVE BLANK TO PLINE        00001738
+        MVC PLINE3+1(99),PLINE3              CLEAR REST OF PLINE        00001739
+        LA R6,PLINE3+1                           POINT AT PLINE+1       00001740
+ENDIF   DS 0H                                    END OF IF BODY         00001741
+        LA R2,4(R2)                              GO TO NEXT ENTRY       00001742
+        B DO3                                    BACK TO DO3            00001743
+ENDDO3  DS 0H                                    END OF DO3 LOOP        00001744
+        XPRNT PLINE3,100                         PRINT PLINE            00001745
+        XPRNT =CL19' NUMBER OF ENTRIES:',19      PRINT HEADER           00001746
+        XDECO R8,OUTPT4                      PREPARE TO PRINT THE COUNT 00001747
+        XPRNT PLINE4,13                             PRINT THE COUNTER   00001748
+**                                                                      00001749
+        L  R13,4(R13)                             GET OUT BACK PTR      00001750
+        LM R14,R12,12(R13)                        RESTORE REGS          00001751
+        BR R14                                    GO BACK TO MAIN       00001752
+*******************************************************************     00001753
+*                      EVEN STORAGE                               *     00001754
+*******************************************************************     00001755
+PLINE5 DC CL1' '                                  CARRIGE CONTROL       00001756
+       DC CL16'NUMS PER LINE ->'                  PER LINE HEADER       00001757
+OUTPT5 DC CL12'OUTPT'                             OUTPT FOR PER LINE    00001758
+PLINE4 DC CL1' '                                  PLINE FOR COUNTER     00001759
+OUTPT4 DC CL12'OUTPT'                             OUTPUT FOR COUNTER    00001760
+ESAVE  DC 18F'-1'                                 EVEN SAVE AREA        00001761
+DIE2   DC F'00'                                   SAFTEY CHECK VAR      00001762
+ONE    DC F'1'                                    FULLWORD OF 1         00001763
+TWO    DC F'2'                                    FULLWORD OF 2         00001764
+PLINE3 DC CL100' '                                PLINE TO PRINT ENTRY  00001765
+       LTORG                                                            00001766
+*                                                                       00001767
+*                                                                       00001768
+R15  EQU  15                                                            00001769
+R14  EQU  14                                                            00001770
+R13  EQU  13                                                            00001800
+R12  EQU  12                                                            00001900
+R11  EQU  11                                                            00002000
+R10  EQU  10                                                            00002001
+R9   EQU   9                                                            00002002
+R8   EQU   8                                                            00002010
+R7   EQU   7                                                            00002020
+R6   EQU   6                                                            00002030
+R4   EQU   4                                                            00002100
+R3   EQU   3                                                            00002202
+R2   EQU   2                                                            00002210
+R1   EQU   1                                                            00002220
+     END                                                                00002400
+/*                                                                      00002500
+//FT05F001 DD *                                                         00002600
+1                                                                       00002700
+2                                                                       00002800
+3                                                                       00002900
+56                                                                      00003000
+277                                                                     00003100
+-984                                                                    00003200
+50                                                                      00003300
+66                                                                      00003400
+56                                                                      00003500
+77                                                                      00003600
+9834                                                                    00003700
+40                                                                      00003800
+1234                                                                    00003900
+323                                                                     00004000
+21                                                                      00004100
+777                                                                     00004200
+533                                                                     00004300
+-87                                                                     00004400
+25                                                                      00004500
+78                                                                      00004600
+/*                                                                      00004700
+//SYSPRINT DD SYSOUT=*                                                  00004800

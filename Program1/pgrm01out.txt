@@ -1,0 +1,80 @@
+1                    J E S 2  J O B  L O G  --  S Y S T E M  S 0 W 1  --  N O D E  Z O S K C T R         
+0 
+ 17.04.58 JOB00836 ---- TUESDAY,   31 JAN 2017 ----
+ 17.04.58 JOB00836  IRR010I  USERID KC03GFC  IS ASSIGNED TO THIS JOB.
+ 17.04.58 JOB00836  ICH70001I KC03GFC  LAST ACCESS AT 17:04:23 ON TUESDAY, JANUARY 31, 2017
+ 17.04.58 JOB00836  $HASP373 KC03GFCA STARTED - INIT 2    - CLASS A        - SYS S0W1
+ 17.04.58 JOB00836  -                                         --TIMINGS (MINS.)--            ----PAGING COUNTS---
+ 17.04.58 JOB00836  -JOBNAME  STEPNAME PROCSTEP    RC   EXCP    TCB    SRB  CLOCK   SERV  PG   PAGE   SWAP    VIO SWAPS
+ 17.04.58 JOB00836  -KC03GFCA                      00     37 ******    .00     .0     82   0      0      0      0     0
+ 17.04.58 JOB00836  -KC03GFCA ENDED.  NAME-VICTOR               TOTAL TCB CPU TIME=   .00  TOTAL ELAPSED TIME=    .0
+ 17.04.58 JOB00836  $HASP395 KC03GFCA ENDED
+0------ JES2 JOB STATISTICS ------
+-  31 JAN 2017 JOB EXECUTION DATE
+-           29 CARDS READ
+-           80 SYSOUT PRINT RECORDS
+-            0 SYSOUT PUNCH RECORDS
+-            7 SYSOUT SPOOL KBYTES
+-         0.00 MINUTES EXECUTION TIME
+         1 //KC03GFCA JOB ,'VICTOR',MSGCLASS=H                                     JOB00836
+         2 //STEP1 EXEC PGM=ASSIST,PARM='MACRO=F'                                  00000900
+         3 //STEPLIB DD DSN=KC02293.ASSIST.LOADLIB,DISP=SHR                        00001000
+         4 //SYSIN DD *                                                            00001100
+         5 //SYSPRINT DD SYSOUT=*                                                  00003600
+ ICH70001I KC03GFC  LAST ACCESS AT 17:04:23 ON TUESDAY, JANUARY 31, 2017
+ IEF236I ALLOC. FOR KC03GFCA STEP1
+ IGD103I SMS ALLOCATED TO DDNAME STEPLIB
+ IEF237I JES2 ALLOCATED TO SYSIN
+ IEF237I JES2 ALLOCATED TO SYSPRINT
+ IEF142I KC03GFCA STEP1 - STEP WAS EXECUTED - COND CODE 0000
+ IGD104I KC02293.ASSIST.LOADLIB                       RETAINED,  DDNAME=STEPLIB 
+ IEF285I   KC03GFC.KC03GFCA.JOB00836.D0000101.?         SYSIN         
+ IEF285I   KC03GFC.KC03GFCA.JOB00836.D0000102.?         SYSOUT        
+ IEF373I STEP/STEP1   /START 2017031.1704
+ IEF032I STEP/STEP1   /STOP  2017031.1704 
+         CPU:     0 HR  00 MIN  00.00 SEC    SRB:     0 HR  00 MIN  00.00 SEC    
+         VIRT:   584K  SYS:   268K  EXT:        0K  SYS:    11376K
+         ATB- REAL:                     0K  SLOTS:                     0K
+              VIRT- ALLOC:       0M SHRD:       0M
+ IEF375I  JOB/KC03GFCA/START 2017031.1704
+ IEF033I  JOB/KC03GFCA/STOP  2017031.1704 
+         CPU:     0 HR  00 MIN  00.00 SEC    SRB:     0 HR  00 MIN  00.00 SEC    
+1*** ASSIST 4.0/A2-05/15/82  470/V7A/0:OS/VS2  INS=SDFP7/X=BGHO, CHECK/TRC/=1180, OPTS=CDKMPR FROM PENN ST*NIU COMPSCI*LT         
+0MACRO=F                                                                                                                          
+0                                                                                                               PAGE    1         
+0  LOC  OBJECT CODE    ADDR1 ADDR2  STMT   SOURCE STATEMENT                                                                       
+ 000000                                1 MAIN   CSECT                                                            00001200         
+ 000000                                2        USING MAIN,15                                                    00001300         
+ 000000 5810 F020            00020     3        L R1,32(R0,R15)   BRING IN NUM1                                  00001400         
+ 000004 5820 F024            00024     4        L R2,36(R0,R15)   BRING IN NUM2                                  00001500         
+ 000008 5B20 F020            00020     5        S R2,32(R0,R15)   SUBTRACT NUMBERS                               00001600         
+ 00000C E160 0000 0000 00000           6        XDUMP                                                            00001700         
+ 000012 5020 F028            00028     7        ST R2,SUM         STORE ANSWER                                   00001800         
+ 000016 E060 F028 0004 00028           8        XDUMP SUM,4                                                      00001900         
+ 00001C 07FE                           9        BR R14            EXIT                                           00002000         
+                                      10 ***************************************************                     00002100         
+ 000020 0000000F                      11 NUM1 DC F'15'            FULLWORD1                                      00002200         
+ 000024 00000019                      12 NUM2 DC F'25'            FULLWORD2                                      00002300         
+ 000028 00000000                      13 SUM  DC F'0'             SUM FOR ANSWER                                 00002400         
+ 00000F                               14 R15  EQU 15                                                             00002500         
+ 00000E                               15 R14  EQU 14                                                             00002600         
+ 000000                               16 R0   EQU  0                                                             00002700         
+ 000001                               17 R1   EQU  1                                                             00002800         
+ 000002                               18 R2   EQU  2                                                             00002900         
+ 000005                               19 R5   EQU  5                                                             00003000         
+                                      20      END                                                                00003100         
+0***  NO   STATEMENTS FLAGGED -  NO   WARNINGS,  NO   ERRORS                                                                      
+0*** DYNAMIC CORE AREA USED:  LOW:    2160 HIGH:     464 LEAVING:  490944 FREE BYTES. AVERAGE:      124 BYTES/STMT ***            
+0*** ASSEMBLY TIME =    0.000 SECS,    21000 STATEMENTS/SEC ***                                                                   
+0*** PROGRAM EXECUTION BEGINNING - ANY OUTPUT BEFORE EXECUTION TIME MESSAGE IS PRODUCED BY USER PROGRAM ***                       
+0BEGIN XSNAP - CALL     1 AT E0000012 USER REGISTERS                                                                              
+0 REGS 0-7      F4F4F4F4    0000000F    0000000A    F4F4F4F4    F4F4F4F4    F4F4F4F4    F4F4F4F4    F4F4F4F4                      
+  REGS 8-15     F4F4F4F4    F4F4F4F4    F4F4F4F4    F4F4F4F4    F4F4F4F4    00000030    FFFE7960    00000000                      
+0                                                                                                                                 
+0BEGIN XSNAP - CALL     2 AT E000001C USER STORAGE                                                                                
+0                             CORE ADDRESSES SPECIFIED-     000028 TO 00002C                                                      
+ 000020   0000000F 00000019 0000000A F5F5F5F5    F5F5F5F5 00000000 F5F5F5F5 F5F5F5F5   *............55555555....55555555*         
+0                                                                                                                                 
+0*** EXECUTION TIME =    0.000 SECS.         7 INSTRUCTIONS EXECUTED -     7000 INSTRUCTIONS/SEC ***                              
+0*** FIRST CARD NOT READ: NO CARDS READ:FILE UNOPENED                                                                             
+0*** AM004 - NORMAL USER TERMINATION BY RETURN ***                                                                                

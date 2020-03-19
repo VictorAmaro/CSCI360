@@ -1,0 +1,173 @@
+//KC03GFCA JOB ,'VICTOR',MSGCLASS=H                                     00000100
+//STEP1 EXEC PGM=ASSIST,PARM='MACRO=F'                                  00000200
+//STEPLIB DD DSN=KC02293.ASSIST.LOADLIB,DISP=SHR                        00000300
+//SYSIN DD *                                                            00000400
+*******************************************************************     00000500
+*Victor Amaro                                                     *     00000600
+*Dr. Jim Leon                                                     *     00000700
+*CSCI 360, Section 2                                              *     00000800
+*TA: Grace                                                        *     00000900
+*z1747708                                                         *     00001000
+*Assignment 4: Create different routines.                         *     00001100
+*              One to build a table                               *     00001110
+*              One to print the table                             *     00001120
+*              One to print even nums in the table                *     00001130
+*******************************************************************     00001200
+MAIN    CSECT                                                           00001300
+        USING MAIN,R15                                                  00001400
+        BAL R13,BUILD                               CALL BUILD ROUTINE  00001500
+        BAL R13,PRINT                               CALL PRINT ROUTINE  00001501
+        BAL R13,EVEN                                CALL EVEN ROUTINE   00001502
+        XDUMP TABLE,200                             DUMP OUT TABLE      00001510
+        BR R14                                      EXIT PROGRAM        00001600
+************************************************                        00002200
+*NAME: BUILD                                   *                        00002300
+*FUNCTION: BUILDS THE TABLE                    *                        00002400
+*REG USEAGE: R12 - TABLE PTR                   *                        00002410
+*            R11 - HOLD ENTRY FROM RECORD      *                        00002420
+************************************************                        00002500
+BUILD   DS 0H                                       BUILD STARTS HERE   00002600
+        LA R12,TABLE                                POINT TO THE TABLE  00002700
+*                                                                       00002800
+DO      XREAD CARD,80                               READ REC            00002900
+        BC B'0100',ENDDO                            CHECK FOR EOF       00003000
+        XDECI R11,CARD                              GET FIRST NUM       00003100
+        ST R11,0(R12)                               PUT INTO TABLE      00003200
+        LA R12,4(R12)                               GO TO NEXT ENTRY    00003300
+        B DO                                        GO TO TOP OF LOOP   00003400
+*                                                                       00003500
+ENDDO   ST R12,EOT                                  SAVE EOT            00003600
+        BR R13                                      GO BACK TO MAIN     00003700
+************************************************                        00003800
+*                BUILD STORAGE                 *                        00003900
+************************************************                        00004000
+CARD    DC 20CL4'CARD'                              80 BYTE CARD        00004100
+TABLE   DC 50F'-15'                                 TABLE               00004200
+EOT     DC F'-5'                                    EOT SAVED HERE      00004300
+*                                                                       00004301
+*                                                                       00004302
+************************************************                        00004310
+*PRINT                                         *                        00004320
+*FUNCTION: PRINT THE TABLE, ONE ENTRY PER LINE *                        00004330
+*REG USAGE: R8 - COUNTER FOR ENTRIES           *                        00004331
+*           R9 - EOT HOLDER                    *                        00004332
+*           R10 - PRINT OUT ENTRY              *                        00004333
+*           R12 - TABLE PTR                    *                        00004334
+************************************************                        00004340
+PRINT   DS 0H                                       PRINT STARTS HERE   00004350
+        SR R8,R8                                  ELEMENT COUNTER TO 0  00004352
+        XPRNT =CL17' NUMBERS IN TABLE',17           PRINT HEADER        00004353
+        LA R12,TABLE                                RESET TABLE POINTER 00004360
+        L  R9,EOT                                LOAD THE EOT INTO R9   00004361
+DO2     CR R12,R9                                END OF TABLE REACHED?  00004370
+        BE ENDDO2                                IF YES, GO TO DONE     00004380
+        BH ERROR                                 SOMETHING WENT WRONG   00004381
+        L R10,0(R12)                             PUT THE ENTRY INTO R10 00004390
+        XDECO R10,OUTPT                      PREPARE TO PRINT THE ENTRY 00004392
+        XPRNT PLINE,13                              PRINT THE ENTRY     00004393
+        LA R12,4(R12)                               MOVE ON IN TABLE    00004394
+        LA R8,1(R8)                                 ADD ONE TO COUNTER  00004395
+        B DO2                                       BACK TO TOP         00004396
+ENDDO2  XPRNT =CL20' NUMBER OF ENTRIES:',20         COUNT HEADER        00004397
+        XDECO R8,OUTPT2                      PREPARE TO PRINT THE COUNT 00004398
+        XPRNT PLINE2,13                             PRINT THE COUNTER   00004399
+        BR R13                                      BACK TO MAIN        00004400
+************************************************                        00004401
+*              PRINT STORAGE                   *                        00004402
+************************************************                        00004403
+ERROR DC F'00'                                      SAFTEY CHECK VAR    00004404
+PLINE DC CL1' '                                     CARRIAGE CONTROL    00004405
+OUTPT DC CL12'OUTPT'                                OUTPUT FOR ENTRY    00004406
+PLINE2 DC CL1' '                                    CARRIAGE CONTROL    00004407
+OUTPT2 DC CL12'OUTPT'                               OUTPUT FOR COUNTER  00004408
+*                                                                       00004410
+*                                                                       00004420
+************************************************                        00004430
+*EVEN                                          *                        00004440
+*PRINT THE EVEN ELEMENTS AND A COUNT           *                        00004450
+*REG USEAGE: R8 - COUNTER FOR ENTRIES          *                        00004451
+*       R7,R6 - USED IN DIVISION/MULTIPLICATION*                        00004452
+*          R3 - PTR TO PLINE                   *                        00004453
+*          R4 - HOLDS THE NUM OF ENTRY PER LINE*                        00004454
+*          R11 - HOLD INPUT FROM TABLE         *                        00004455
+************************************************                        00004460
+EVEN    DS 0H                                                           00004470
+        SR R8,R8                                    RESET COUNTER       00004480
+        SR R4,R4                                 COUNT = 0              00004481
+        SR R5,R5                                 PLINE COUNT = 0        00004482
+        XPRNT =CL22' EVEN NUMBERS IN TABLE',22      PRINT HEADER        00004483
+        LA R12,TABLE                                POINT TO THE TABLE  00004484
+        LA R4,3(R4)                              THREE NUMBERS PER LINE 00004486
+        LA R3,PLINE3+1                           POINT TO PLINE+1       00004487
+DO3     CR R12,R9                                END OF TABLE REACHED?  00004488
+        BE ENDDO3                                IF YES, GO TO ENDODO3  00004489
+        BH ERROR                                 SOMETHING WENT WRONG   00004490
+        L R7,0(R12)                     LOAD CURRENT TABLE VAL INTO R7  00004491
+        M R6,ONE                                    PREPARE TO DIVIDE   00004493
+        D R6,TWO                                    DIVIDE BY 2         00004494
+IF      LTR R6,R6                                CHECK FOR EVEN NUMBER  00004495
+        BNZ ENDIF                                   NOT EVEN,TO ENDIF   00004496
+        LA R8,1(R8)                                 ADD ONE TO COUNTER  00004497
+        L R11,0(R12)                    GET NUM OUT OF TABLE INTO R11   00004498
+        XDECO R11,0(R3)                 PUT NUM OUT ON PLINE            00004499
+        LA R3,12(R3)                    BUMP PLINE PTR BY 12            00004500
+        LA R5,1(R5)                          ADD ONE TO PLINE COUT      00004501
+IF2     CR R5,R4                        HAS THREE PER LINE BEEN REACHED 00004502
+        BNE ENDIF                            NOT EQUAL,TO END IF        00004503
+        XPRNT PLINE3,100                     PRINTOUT LINE              00004504
+        SR R5,R5                                    RESET PLINE COUNT   00004505
+        MVI PLINE3,C' '                      MOVE BLANK TO PLINE        00004506
+        MVC PLINE3+1(99),PLINE3              CLEAR REST OF PLINE        00004507
+        LA R3,PLINE3+1                              POINT AT PLINE+1    00004508
+ENDIF   DS 0H                                       END OF IF BODY      00004511
+        LA R12,4(R12)                               GO TO NEXT ENTRY    00004513
+        B DO3                                       BACK TO TOP         00004514
+ENDDO3  XPRNT PLINE3,100                            PRINT PLINE         00004515
+        XPRNT =CL19' NUMBER OF ENTRIES:',19         PRINT HEADER        00004516
+        XDECO R8,OUTPT2                      PREPARE TO PRINT THE COUNT 00004517
+        XPRNT PLINE2,13                             PRINT THE COUNTER   00004518
+        BR 13                                       BACK TO MAIN        00004519
+************************************************                        00004520
+*                EVEN STORAGE                  *                        00004521
+************************************************                        00004522
+ONE DC F'1'                                                             00004523
+TWO DC F'2'                                                             00004524
+PLINE3 DC CL100' '                                                      00004525
+R15 EQU 15                                                              00004530
+R14 EQU 14                                                              00004600
+R13 EQU 13                                                              00004700
+R12 EQU 12                                                              00004800
+R11 EQU 11                                                              00004900
+R10 EQU 10                                                              00004901
+R9  EQU  9                                                              00004902
+R8  EQU  8                                                              00004903
+R7  EQU  7                                                              00004904
+R6  EQU  6                                                              00004905
+R5  EQU  5                                                              00004906
+R4  EQU  4                                                              00004907
+R3  EQU  3                                                              00004908
+    END                                                                 00004910
+/*                                                                      00005000
+//FT05F001 DD *                                                         00005100
+1                                                                       00005200
+2                                                                       00005300
+3                                                                       00005400
+56                                                                      00005500
+277                                                                     00005600
+-984                                                                    00005700
+50                                                                      00005800
+66                                                                      00005900
+56                                                                      00006000
+77                                                                      00006100
+9834                                                                    00006200
+40                                                                      00006300
+1234                                                                    00006400
+323                                                                     00006500
+21                                                                      00006600
+777                                                                     00006700
+533                                                                     00006800
+-87                                                                     00006900
+25                                                                      00007000
+78                                                                      00007100
+/*                                                                      00007200
+//SYSPRINT DD SYSOUT=*                                                  00007300

@@ -1,0 +1,373 @@
+1                    J E S 2  J O B  L O G  --  S Y S T E M  S 0 W 1  --  N O D E  Z O S K C T R         
+0 
+ 22.32.29 JOB00982 ---- WEDNESDAY, 12 APR 2017 ----
+ 22.32.29 JOB00982  IRR010I  USERID KC03GFC  IS ASSIGNED TO THIS JOB.
+ 22.32.29 JOB00982  ICH70001I KC03GFC  LAST ACCESS AT 22:27:21 ON WEDNESDAY, APRIL 12, 2017
+ 22.32.29 JOB00982  $HASP373 KC03GFCA STARTED - INIT 2    - CLASS A        - SYS S0W1
+ 22.32.29 JOB00982  -                                         --TIMINGS (MINS.)--            ----PAGING COUNTS---
+ 22.32.29 JOB00982  -JOBNAME  STEPNAME PROCSTEP    RC   EXCP    TCB    SRB  CLOCK   SERV  PG   PAGE   SWAP    VIO SWAPS
+ 22.32.29 JOB00982  -KC03GFCA                      00     55 ******    .00     .0    187   0      0      0      0     0
+ 22.32.29 JOB00982  -KC03GFCA ENDED.  NAME-VICTOR               TOTAL TCB CPU TIME=   .00  TOTAL ELAPSED TIME=    .0
+ 22.32.29 JOB00982  $HASP395 KC03GFCA ENDED
+0------ JES2 JOB STATISTICS ------
+-  12 APR 2017 JOB EXECUTION DATE
+-          270 CARDS READ
+-          373 SYSOUT PRINT RECORDS
+-            0 SYSOUT PUNCH RECORDS
+-           38 SYSOUT SPOOL KBYTES
+-         0.00 MINUTES EXECUTION TIME
+         1 //KC03GFCA JOB ,'VICTOR',MSGCLASS=H                                     JOB00982
+         2 //STEP1 EXEC PGM=ASSIST,PARM='MACRO=F'                                  00000200
+         3 //STEPLIB DD DSN=KC02293.ASSIST.LOADLIB,DISP=SHR                        00000300
+         4 //SYSIN DD *                                                            00000400
+         5 //FT05F001 DD *                                                         00002600
+         6 //SYSPRINT DD SYSOUT=*                                                  00004800
+ ICH70001I KC03GFC  LAST ACCESS AT 22:27:21 ON WEDNESDAY, APRIL 12, 2017
+ IEF236I ALLOC. FOR KC03GFCA STEP1
+ IGD103I SMS ALLOCATED TO DDNAME STEPLIB
+ IEF237I JES2 ALLOCATED TO SYSIN
+ IEF237I JES2 ALLOCATED TO FT05F001
+ IEF237I JES2 ALLOCATED TO SYSPRINT
+ IEF142I KC03GFCA STEP1 - STEP WAS EXECUTED - COND CODE 0000
+ IGD104I KC02293.ASSIST.LOADLIB                       RETAINED,  DDNAME=STEPLIB 
+ IEF285I   KC03GFC.KC03GFCA.JOB00982.D0000101.?         SYSIN         
+ IEF285I   KC03GFC.KC03GFCA.JOB00982.D0000102.?         SYSIN         
+ IEF285I   KC03GFC.KC03GFCA.JOB00982.D0000103.?         SYSOUT        
+ IEF373I STEP/STEP1   /START 2017102.2232
+ IEF032I STEP/STEP1   /STOP  2017102.2232 
+         CPU:     0 HR  00 MIN  00.01 SEC    SRB:     0 HR  00 MIN  00.00 SEC    
+         VIRT:   584K  SYS:   268K  EXT:        0K  SYS:    12356K
+         ATB- REAL:                     0K  SLOTS:                     0K
+              VIRT- ALLOC:       0M SHRD:       0M
+ IEF375I  JOB/KC03GFCA/START 2017102.2232
+ IEF033I  JOB/KC03GFCA/STOP  2017102.2232 
+         CPU:     0 HR  00 MIN  00.01 SEC    SRB:     0 HR  00 MIN  00.00 SEC    
+1*** ASSIST 4.0/A2-05/15/82  470/V7A/0:OS/VS2  INS=SDFP7/X=BGHO, CHECK/TRC/=1180, OPTS=CDKMPR FROM PENN ST*NIU COMPSCI*LT         
+0MACRO=F                                                                                                                          
+0                                                                                                               PAGE    1         
+0  LOC  OBJECT CODE    ADDR1 ADDR2  STMT   SOURCE STATEMENT                                                                       
+                                       1 *******************************************************************     00000500         
+                                       2 *Victor Amaro                                                     *     00000600         
+                                       3 *CSCI 360, Section 2                                              *     00000700         
+                                       4 *TA: Grace                                                        *     00000800         
+                                       5 *z1747708                                                         *     00000900         
+                                       6 *Assignment 7: Create different routines.                         *     00001000         
+                                       7 *              One to build a table                               *     00001100         
+                                       8 *              One to print the table                             *     00001200         
+                                       9 *              One to print even nums in the table                *     00001300         
+                                      10 *******************************************************************     00001400         
+ 000000                               11 MAIN    CSECT                                                           00001500         
+ 000000 90EC D00C            0000C    12         STM R14,R12,12(R13)                      SAVE CALLERS REGSKAGE  00001501         
+ 000004 18CF                          13         LR R12,R15                               POINT 12 AT BUILD      00001502         
+ 000000                               14         USING MAIN,R12                           SET BASE REG           00001503         
+ 000006 41E0 C05C            0005C    15         LA R14,MSAVE                             POINT TO MSAVE AREA    00001504         
+ 00000A 50ED 0008            00008    16         ST R14,8(R13)                            SET FORWARD PTR        00001505         
+ 00000E 50DE 0004            00004    17         ST R13,4(R14)                            SET BACK PTR           00001506         
+ 000012 18DE                          18         LR R13,R14                               R13 IS AT MSAVE        00001507         
+                                      19 ***                                                                     00001508         
+ 000014 4110 C174            00174    20         LA R1,BDLIST                            POINT R1 AT BDLIST      00001509         
+ 000018 58F0 C190            00190    21         L  R15,=V(BUILD)                        R15 POINTS TO SUB       00001510         
+ 00001C 05EF                          22         BALR R14,R15                            GO TO SUB,R14 IS RETURN 00001511         
+ 00001E E060 C0A4 0258 000A4          23         XDUMP TABLE,600                         DUMP OUT TABLE          00001512         
+                                      24 *                                                                       00001513         
+ 000024 4110 C17C            0017C    25         LA R1,PRTLIST                           POINT R1 AT PRTLIST     00001515         
+ 000028 58F0 C194            00194    26         L  R15,=V(PRINT)                        R15 POINTS TO SUB       00001517         
+ 00002C 05EF                          27         BALR R14,R15                            GO TO SUB,R14 IS RETURN 00001518         
+                                      28 *                                                                       00001519         
+ 00002E 4140 0003            00003    29         LA R4,3                                 LOAD R4 WITH 3          00001520         
+ 000032 5040 C170            00170    30         ST R4,COUNT                             STORE R4 INTO COUNT     00001521         
+ 000036 4110 C184            00184    31         LA R1,EVNLIST                           POINT R1 AT EVNLIST     00001523         
+ 00003A 58F0 C198            00198    32         L  R15,=V(EVEN)                         R15 POINTS TO SUB       00001524         
+ 00003E 05EF                          33         BALR R14,R15                            GO TO SUB,R14 IS RETURN 00001525         
+                                      34 *                                                                       00001526         
+ 000040 4140 0004            00004    35         LA R4,4                                 LOAD R4 WITH 4          00001530         
+ 000044 5040 C170            00170    36         ST R4,COUNT                             STORE R4 INTO COUNT     00001531         
+ 000048 4110 C184            00184    37         LA R1,EVNLIST                           POINT R1 AT EVNLIST     00001532         
+ 00004C 58F0 C198            00198    38         L  R15,=V(EVEN)                         R15 POINTS TO SUB       00001533         
+ 000050 05EF                          39         BALR R14,R15                            GO TO SUB,R14 IS RETURN 00001534         
+                                      40 ***                                                                     00001535         
+ 000052 58DD 0004            00004    41         L  R13,4(R13)                           GET OUT BACK PTR        00001536         
+ 000056 98EC D00C            0000C    42         LM R14,R12,12(R13)                      RESTORE REGS            00001537         
+ 00005A 07FE                          43         BR 14                                   RETURN LINKAGE          00001538         
+                                      44 *******************************************************************     00001539         
+                                      45 *                      MAIN STORAGE                               *     00001540         
+                                      46 *******************************************************************     00001541         
+ 00005C FFFFFFFFFFFFFFFF              47 MSAVE   DC 18F'-1'                                 MAIN SAVE AREA       00001542         
+ 0000A4 FFFFFFF1FFFFFFF1              48 TABLE   DC 50F'-15'                                TABLE                00001550         
+ 00016C FFFFFFFB                      49 EOT     DC F'-5'                                   EOT SAVED HEREE      00001560         
+ 000170 FFFFFFF1                      50 COUNT   DC F'-15'                                  NUMS PER LINE        00001570         
+ 000174 000000A40000016C              51 BDLIST  DC A(TABLE,EOT)                            BUILD PARAMETER LIST 00001580         
+ 00017C 000000A40000016C              52 PRTLIST DC A(TABLE,EOT)                            PRINT PARAMETER LIST 00001590         
+1                                                                                                               PAGE    2         
+0  LOC  OBJECT CODE    ADDR1 ADDR2  STMT   SOURCE STATEMENT                                                                       
+ 000184 000000A40000016C              53 EVNLIST DC A(TABLE,EOT,COUNT)                      EVEN PARAMETER LIST  00001591         
+                                      54         LTORG                                                           00001592         
+ 000190 000001A0                      55                =V(BUILD)                                                                 
+ 000194 00000278                      56                =V(PRINT)                                                                 
+ 000198 00000370                      57                =V(EVEN)                                                                  
+                                      58 *                                                                       00001593         
+                                      59 *                                                                       00001594         
+                                      60 *******************************************************************     00001595         
+                                      61 *NAME: BUILD                                                      *     00001596         
+                                      62 *FUNCTION: BUILDS THE TABLE                                       *     00001597         
+                                      63 *REGS: R2 - TABLE POINTER                                         *     00001598         
+                                      64 *      R3 - HOLDS EOT                                             *     00001599         
+                                      65 *      R11 - HOLD ENTRY FROM CARD                                 *     00001600         
+                                      66 *******************************************************************     00001601         
+ 0001A0                               67 BUILD   CSECT                                    BUILD STARTS HERE      00001602         
+ 0001A0 90EC D00C            0000C    68         STM R14,R12,12(R13)                      SAVE CALLERS REGS      00001603         
+ 0001A4 18CF                          69         LR R12,R15                               POINT 12 AT BUILD      00001604         
+ 0001A0                               70         USING BUILD,R12                          SET BASE REG           00001605         
+ 0001A6 41E0 C090            00230    71         LA R14,BSAVE                             POINT TO BSAVE AREA    00001606         
+ 0001AA 50ED 0008            00008    72         ST R14,8(R13)                            SET FORWARD PTR        00001607         
+ 0001AE 50DE 0004            00004    73         ST R13,4(R14)                            SET BACK PTR           00001608         
+ 0001B2 18DE                          74         LR R13,R14                               R13 IS AT BSAVE        00001609         
+ 0001B4 9823 1000            00000    75         LM R2,R3,0(R1)                           BRING IN PARMS         00001610         
+                                      76 **                                                                      00001611         
+ 0001B8                               77 DO      DS 0H                                    START OF DO LOOP       00001612         
+ 0001B8 E000 C040 0050 001E0          78         XREAD CARD,80                            READ REC               00001613         
+ 0001BE 4740 C032            001D2    79         BC B'0100',ENDDO                         CHECK FOR EOF          00001614         
+ 0001C2 53B0 C040            001E0    80         XDECI R11,CARD                           GET FIRST NUM          00001615         
+ 0001C6 50B2 0000            00000    81         ST R11,0(R2)                             PUT INTO TABLE         00001616         
+ 0001CA 4122 0004            00004    82         LA R2,4(R2)                              GO TO NEXT ENTRY       00001617         
+ 0001CE 47F0 C018            001B8    83         B DO                                     GO TO TOP OF LOOP      00001618         
+ 0001D2                               84 ENDDO   DS 0H                                    END OF DO LOOP         00001619         
+ 0001D2 5023 0000            00000    85         ST R2,0(R3)                              SAVE EOT               00001620         
+                                      86 **                                                                      00001621         
+ 0001D6 58DD 0004            00004    87         L  R13,4(R13)                            GET OUT BACK PTR       00001622         
+ 0001DA 98EC D00C            0000C    88         LM R14,R12,12(R13)                       RESTORE REGS           00001623         
+ 0001DE 07FE                          89         BR R14                                   GO BACK TO MAIN        00001624         
+                                      90 *******************************************************************     00001625         
+                                      91 *                     BUILD STORAGE                               *     00001626         
+                                      92 *******************************************************************     00001627         
+ 0001E0 C3C1D9C4C3C1D9C4              93 CARD  DC 20CL4'CARD'                            80 BYTE CARD            00001628         
+ 000230 FFFFFFFFFFFFFFFF              94 BSAVE DC 18F'-1'                                BUILD SAVE AREA         00001629         
+                                      95       LTORG                                                             00001630         
+                                      96 *                                                                       00001631         
+                                      97 *                                                                       00001632         
+                                      98 *******************************************************************     00001633         
+                                      99 *NAME: PRINT                                                      *     00001634         
+                                     100 *FUNCTION: PRINTS OUT THE WHOLE TABLE                             *     00001635         
+                                     101 *REGS: R2 - TABLE PTR                                             *     00001636         
+                                     102 *      R3 - HOLDS EOT                                             *     00001637         
+                                     103 *      R8 - ELEMENT COUNTER                                       *     00001638         
+                                     104 *      R11 - HOLDS ENTRY FROM TABLE                               *     00001639         
+                                     105 *                                                                 *     00001640         
+                                     106 *******************************************************************     00001641         
+ 000278                              107 PRINT   CSECT                                    PRINT STARTS HERE      00001642         
+ 000278 90EC D00C            0000C   108         STM R14,R12,12(R13)                      SAVE CALLERS REGS      00001643         
+ 00027C 18CF                         109         LR R12,R15                               POINT 12 AT BUILD      00001644         
+1                                                                                                               PAGE    3         
+0  LOC  OBJECT CODE    ADDR1 ADDR2  STMT   SOURCE STATEMENT                                                                       
+ 000278                              110         USING PRINT,R12                          SET BASE REG           00001645         
+ 00027E 41E0 C064            002DC   111         LA R14,PSAVE                             POINT TO BSAVE AREA    00001646         
+ 000282 50ED 0008            00008   112         ST R14,8(R13)                            SET FORWARD PTR        00001647         
+ 000286 50DE 0004            00004   113         ST R13,4(R14)                            SET BACK PTR           00001648         
+ 00028A 18DE                         114         LR R13,R14                               R13 IS AT BSAVE        00001649         
+ 00028C 9823 1000            00000   115         LM R2,R3,0(R1)                           BRING IN PARMS         00001650         
+                                     116 **                                                                      00001651         
+ 000290 E020 C0E4 0012 0035C         117         XPRNT =CL18' NUMBERS IN TABLE:',18       PRINT HEADER           00001652         
+ 000296 1B88                         118         SR R8,R8                                 ELEMENT COUNTER TO 0   00001653         
+ 000298 5833 0000            00000   119         L R3,0(R3)                               BRING IN EOT           00001654         
+ 00029C                              120 DO2     DS 0H                                    START OF DO2 LOOP      00001655         
+ 00029C 1923                         121         CR R2,R3                                 EOT REACHED?           00001656         
+ 00029E 4780 C048            002C0   122         BE ENDDO2                                YES, GO TO DONE1       00001657         
+ 0002A2 4720 C0AC            00324   123         BH DIE                                   ERROR                  00001658         
+ 0002A6 58B2 0000            00000   124         L R11,0(R2)                              PUT ENTRY INTO R11     00001659         
+ 0002AA 52B0 C0B1            00329   125         XDECO R11,OUTPT                      PREPARE TO PRINT THE COUNT 00001660         
+ 0002AE E020 C0B0 000D 00328         126         XPRNT PLINE,13                           PRINT ENTRY            00001661         
+ 0002B4 4122 0004            00004   127         LA R2,4(R2)                              GO TO NEXT ENTRY       00001662         
+ 0002B8 4188 0001            00001   128         LA R8,1(R8)                               ADD ONE TO COUNTER    00001663         
+ 0002BC 47F0 C024            0029C   129         B DO2                                     BACK TO DO2           00001664         
+ 0002C0                              130 ENDDO2  DS 0H                                     END OF DO2 LOOP       00001665         
+ 0002C0 E020 C0D0 0014 00348         131         XPRNT =CL20' NUMBER OF ENTRIES:',20       COUNT HEADER          00001666         
+ 0002C6 5280 C0BE            00336   132         XDECO R8,OUTPT2                     PREPARE TO PRINT THE COUNT  00001667         
+ 0002CA E020 C0BD 000D 00335         133         XPRNT PLINE2,13                           PRINT THE COUNTER     00001668         
+                                     134 **                                                                      00001669         
+ 0002D0 58DD 0004            00004   135         L  R13,4(R13)                             GET OUT BACK PTR      00001670         
+ 0002D4 98EC D00C            0000C   136         LM R14,R12,12(R13)                        RESTORE REGS          00001671         
+ 0002D8 07FE                         137         BR R14                                    GO BACK TO MAIN       00001672         
+                                     138 *******************************************************************     00001673         
+                                     139 *                     PRINT STORAGE                               *     00001674         
+                                     140 *******************************************************************     00001675         
+ 0002DC FFFFFFFFFFFFFFFF             141 PSAVE  DC 18F'-1'                                 PRINT SAVE AREA       00001676         
+ 000324 00000000                     142 DIE    DC F'00'                                   SAFTEY CHECK VAR      00001677         
+ 000328 40                           143 PLINE  DC CL1' '                                   PLINE FOR NUMBERS    00001678         
+ 000329 D6E4E3D7E3404040             144 OUTPT  DC CL12'OUTPT'                              OUTPUT FOR ENTRY     00001679         
+ 000335 40                           145 PLINE2 DC CL1' '                                  PLINE FOR COUNTER     00001680         
+ 000336 D6E4E3D7E3404040             146 OUTPT2 DC CL12'OUTPT'                             OUTPUT FOR COUNTER    00001681         
+                                     147        LTORG                                                            00001682         
+ 000348 40D5E4D4C2C5D940             148                =CL20' NUMBER OF ENTRIES:'                                                
+ 00035C 40D5E4D4C2C5D9E2             149                =CL18' NUMBERS IN TABLE:'                                                 
+                                     150 *                                                                       00001683         
+                                     151 *                                                                       00001684         
+                                     152 *******************************************************************     00001685         
+                                     153 *NAME: EVEN                                                       *     00001686         
+                                     154 *FUNCTION: PRINTS OUT THE EVEN NUMBERS                            *     00001687         
+                                     155 * REGS: R2 - TABLE POINTER                                        *     00001688         
+                                     156 *       R3 - HOLDS EOT                                            *     00001689         
+                                     157 *       R4 - HOLDS HOW MNAY #S PER LINE DESIRED                   *     00001690         
+                                     158 *       R7 - COUNTER FOR #S PER LINE                              *     00001691         
+                                     159 *       R8 - COUNTER FOR EVEN #S                                  *     00001692         
+                                     160 *       R6 - PLINE3 POINTER PER LINE                              *     00001693         
+                                     161 *       R9 - HOLDS VAL FROM ENTRY (TO PUT OUT ON PLINE3)          *     00001694         
+                                     162 *       R10 - USED FOR R11 MATH                                   *     00001695         
+                                     163 *       R11 - HOLDS VAL FROM TABLE (TO DO MATH ON)                *     00001696         
+                                     164 *******************************************************************     00001698         
+ 000370                              165 EVEN    CSECT                                    EVEN STARTS HERE       00001699         
+ 000370 90EC D00C            0000C   166         STM R14,R12,12(R13)                      SAVE CALLERS REGS      00001700         
+1                                                                                                               PAGE    4         
+0  LOC  OBJECT CODE    ADDR1 ADDR2  STMT   SOURCE STATEMENT                                                                       
+ 000374 18CF                         167         LR R12,R15                               POINT 12 AT BUILD      00001701         
+ 000370                              168         USING EVEN,R12                           SET BASE REG           00001702         
+ 000376 41E0 C0DC            0044C   169         LA R14,ESAVE                             POINT TO BSAVE AREA    00001703         
+ 00037A 50ED 0008            00008   170         ST R14,8(R13)                            SET FORWARD PTR        00001704         
+ 00037E 50DE 0004            00004   171         ST R13,4(R14)                            SET BACK PTR           00001705         
+ 000382 18DE                         172         LR R13,R14                               R13 IS AT BSAVE        00001706         
+ 000384 9824 1000            00000   173         LM R2,R4,0(R1)                           BRING IN PARMS         00001707         
+                                     174 **                                                                      00001708         
+ 000388 1B88                         175         SR R8,R8                                 EVEN COUNTER TO 0      00001711         
+ 00038A 1B77                         176         SR R7,R7                                 PER LINE CNT TO 0      00001712         
+ 00038C 5833 0000            00000   177         L R3,0(R3)                               BRING IN EOT           00001713         
+ 000390 5844 0000            00000   178         L R4,0(R4)                               BRING IN PER LINE CNT  00001714         
+ 000394 4160 C131            004A1   179         LA R6,PLINE3+1                           POINT TO PLINE+1       00001715         
+ 000398 E020 C198 0002 00508         180         XPRNT =CL2'  ',2                         NEW LINE               00001716         
+ 00039E E020 C19A 0017 0050A         181         XPRNT =CL23' EVEN NUMBERS IN TABLE:',23  PRINT HEADER           00001717         
+ 0003A4 5240 C0C3            00433   182         XDECO R4,OUTPT5                          PER LINE TO PRINT      00001718         
+ 0003A8 E020 C0B2 001D 00422         183         XPRNT PLINE5,29                          PRINT PER LINE HEADER  00001719         
+ 0003AE                              184 DO3     DS 0H                                    START OF DO3 LOOP      00001720         
+ 0003AE 1923                         185         CR R2,R3                                 EOT REACHED?           00001721         
+ 0003B0 4780 C092            00402   186         BE ENDDO3                                YES, GO TO DONE4       00001722         
+ 0003B4 4720 C124            00494   187         BH DIE2                                  ERROR                  00001723         
+ 0003B8 58B2 0000            00000   188         L R11,0(R2)                              PUT ENTRY INTO R11     00001724         
+ 0003BC 5CA0 C128            00498   189         M R10,ONE                                PREPARE TO DIVIDE      00001725         
+ 0003C0 5DA0 C12C            0049C   190         D R10,TWO                                DIVIDE BY 2            00001726         
+ 0003C4 12AA                         191 IF      LTR R10,R10                              CHECK FOR EVEN NUMBER  00001727         
+ 0003C6 4770 C08A            003FA   192         BNZ ENDIF                                NOT EVEN,TO ENDIF      00001728         
+ 0003CA 4188 0001            00001   193         LA R8,1(R8)                              ADD ONE TO COUNTER     00001729         
+ 0003CE 5892 0000            00000   194         L R9,0(R2)                        GET NUM OUT OF TABLE INTO R9  00001730         
+ 0003D2 5296 0000            00000   195         XDECO R9,0(R6)                           PUT NUM OUT ON PLINE   00001731         
+ 0003D6 4166 000C            0000C   196         LA R6,12(R6)                             BUMP PLINE PTR BY 12   00001732         
+ 0003DA 4177 0001            00001   197         LA R7,1(R7)                              ADD ONE TO PLINE COUT  00001733         
+ 0003DE 1974                         198 IF2     CR R7,R4                        HAS PER LINE COUNT BEEN REACHED 00001734         
+ 0003E0 4770 C08A            003FA   199         BNE ENDIF                                NOT EQUAL,TO END IF    00001735         
+ 0003E4 E020 C130 0064 004A0         200         XPRNT PLINE3,100                         PRINTOUT LINE          00001736         
+ 0003EA 1B77                         201         SR R7,R7                                 RESET PLINE COUNT      00001737         
+ 0003EC 9240 C130      004A0         202         MVI PLINE3,C' '                      MOVE BLANK TO PLINE        00001738         
+ 0003F0 D262 C131 C130 004A1 004A0   203         MVC PLINE3+1(99),PLINE3              CLEAR REST OF PLINE        00001739         
+ 0003F6 4160 C131            004A1   204         LA R6,PLINE3+1                           POINT AT PLINE+1       00001740         
+ 0003FA                              205 ENDIF   DS 0H                                    END OF IF BODY         00001741         
+ 0003FA 4122 0004            00004   206         LA R2,4(R2)                              GO TO NEXT ENTRY       00001742         
+ 0003FE 47F0 C03E            003AE   207         B DO3                                    BACK TO DO3            00001743         
+ 000402                              208 ENDDO3  DS 0H                                    END OF DO3 LOOP        00001744         
+ 000402 E020 C130 0064 004A0         209         XPRNT PLINE3,100                         PRINT PLINE            00001745         
+ 000408 E020 C1B1 0013 00521         210         XPRNT =CL19' NUMBER OF ENTRIES:',19      PRINT HEADER           00001746         
+ 00040E 5280 C0D0            00440   211         XDECO R8,OUTPT4                      PREPARE TO PRINT THE COUNT 00001747         
+ 000412 E020 C0CF 000D 0043F         212         XPRNT PLINE4,13                             PRINT THE COUNTER   00001748         
+                                     213 **                                                                      00001749         
+ 000418 58DD 0004            00004   214         L  R13,4(R13)                             GET OUT BACK PTR      00001750         
+ 00041C 98EC D00C            0000C   215         LM R14,R12,12(R13)                        RESTORE REGS          00001751         
+ 000420 07FE                         216         BR R14                                    GO BACK TO MAIN       00001752         
+                                     217 *******************************************************************     00001753         
+                                     218 *                      EVEN STORAGE                               *     00001754         
+                                     219 *******************************************************************     00001755         
+ 000422 40                           220 PLINE5 DC CL1' '                                  CARRIGE CONTROL       00001756         
+ 000423 D5E4D4E240D7C5D9             221        DC CL16'NUMS PER LINE ->'                  PER LINE HEADER       00001757         
+ 000433 D6E4E3D7E3404040             222 OUTPT5 DC CL12'OUTPT'                             OUTPT FOR PER LINE    00001758         
+ 00043F 40                           223 PLINE4 DC CL1' '                                  PLINE FOR COUNTER     00001759         
+1                                                                                                               PAGE    5         
+0  LOC  OBJECT CODE    ADDR1 ADDR2  STMT   SOURCE STATEMENT                                                                       
+ 000440 D6E4E3D7E3404040             224 OUTPT4 DC CL12'OUTPT'                             OUTPUT FOR COUNTER    00001760         
+ 00044C FFFFFFFFFFFFFFFF             225 ESAVE  DC 18F'-1'                                 EVEN SAVE AREA        00001761         
+ 000494 00000000                     226 DIE2   DC F'00'                                   SAFTEY CHECK VAR      00001762         
+ 000498 00000001                     227 ONE    DC F'1'                                    FULLWORD OF 1         00001763         
+ 00049C 00000002                     228 TWO    DC F'2'                                    FULLWORD OF 2         00001764         
+ 0004A0 4040404040404040             229 PLINE3 DC CL100' '                                PLINE TO PRINT ENTRY  00001765         
+                                     230        LTORG                                                            00001766         
+ 000508 4040                         231                =CL2'  '                                                                  
+ 00050A 40C5E5C5D540D5E4             232                =CL23' EVEN NUMBERS IN TABLE:'                                            
+ 000521 40D5E4D4C2C5D940             233                =CL19' NUMBER OF ENTRIES:'                                                
+                                     234 *                                                                       00001767         
+                                     235 *                                                                       00001768         
+ 00000F                              236 R15  EQU  15                                                            00001769         
+ 00000E                              237 R14  EQU  14                                                            00001770         
+ 00000D                              238 R13  EQU  13                                                            00001800         
+ 00000C                              239 R12  EQU  12                                                            00001900         
+ 00000B                              240 R11  EQU  11                                                            00002000         
+ 00000A                              241 R10  EQU  10                                                            00002001         
+ 000009                              242 R9   EQU   9                                                            00002002         
+ 000008                              243 R8   EQU   8                                                            00002010         
+ 000007                              244 R7   EQU   7                                                            00002020         
+ 000006                              245 R6   EQU   6                                                            00002030         
+ 000004                              246 R4   EQU   4                                                            00002100         
+ 000003                              247 R3   EQU   3                                                            00002202         
+ 000002                              248 R2   EQU   2                                                            00002210         
+ 000001                              249 R1   EQU   1                                                            00002220         
+                                     250      END                                                                00002400         
+0***  NO   STATEMENTS FLAGGED -  NO   WARNINGS,  NO   ERRORS                                                                      
+0*** DYNAMIC CORE AREA USED:  LOW:   20400 HIGH:    1572 LEAVING:  471596 FREE BYTES. AVERAGE:       87 BYTES/STMT ***            
+0*** ASSEMBLY TIME =    0.001 SECS,   251000 STATEMENTS/SEC ***                                                                   
+0*** PROGRAM EXECUTION BEGINNING - ANY OUTPUT BEFORE EXECUTION TIME MESSAGE IS PRODUCED BY USER PROGRAM ***                       
+0BEGIN XSNAP - CALL     1 AT D0000024 USER STORAGE                                                                                
+0                             CORE ADDRESSES SPECIFIED-     0000A4 TO 0002FC                                                      
+ 0000A0   00000000 00000001 00000002 00000003    00000038 00000115 FFFFFC28 00000032   *................................*         
+ 0000C0   00000042 00000038 0000004D 0000266A    00000028 000004D2 00000143 00000015   *.......................K........*         
+ 0000E0   00000309 00000215 FFFFFFA9 00000019    0000004E FFFFFFF1 FFFFFFF1 FFFFFFF1   *.......................1...1...1*         
+ 000100   FFFFFFF1 FFFFFFF1 FFFFFFF1 FFFFFFF1    FFFFFFF1 FFFFFFF1 FFFFFFF1 FFFFFFF1   *...1...1...1...1...1...1...1...1*         
+   LINES    000120-000140    SAME AS ABOVE                                                                                        
+ 000160   FFFFFFF1 FFFFFFF1 FFFFFFF1 000000F4    FFFFFFF1 000000A4 0000016C 000000A4   *...1...1...1...4...1............*         
+ 000180   0000016C 000000A4 0000016C 00000170    000001A0 00000278 00000370 F5F5F5F5   *............................5555*         
+ 0001A0   90ECD00C 18CF41E0 C09050ED 000850DE    000418DE 98231000 E000C040 00504740   *........................... ... *         
+ 0001C0   C03253B0 C04050B2 00004122 000447F0    C0185023 000058DD 000498EC D00C07FE   *..... .........0................*         
+ 0001E0   F7F84040 40404040 40404040 40404040    40404040 40404040 40404040 40404040   *78                              *         
+ 000200   40404040 40404040 40404040 40404040    40404040 40404040 40404040 40404040   *                                *         
+ 000220   40404040 40404040 F0F0F0F0 F4F6F0F0    FFFFFFFF 0000005C FFFFFFFF FFFFFFFF   *        00004600................*         
+ 000240   FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF    FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF   *................................*         
+ 000260   FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF    FFFFFFFF FFFFFFFF 90ECD00C 18CF41E0   *................................*         
+ 000280   C06450ED 000850DE 000418DE 98231000    E020C0E4 00121B88 58330000 19234780   *...................U............*         
+ 0002A0   C0484720 C0AC58B2 000052B0 C0B1E020    C0B0000D 41220004 41880001 47F0C024   *.............................0..*         
+ 0002C0   E020C0D0 00145280 C0BEE020 C0BD000D    58DD0004 98ECD00C 07FEF5F5 FFFFFFFF   *..........................55....*         
+ 0002E0   FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF    FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF   *................................*         
+0                                                                                                                                 
+ NUMBERS IN TABLE:                                                                                                                
+1           1                                                                                                                     
+            2                                                                                                                     
+            3                                                                                                                     
+           56                                                                                                                     
+          277                                                                                                                     
+         -984                                                                                                                     
+           50                                                                                                                     
+           66                                                                                                                     
+           56                                                                                                                     
+           77                                                                                                                     
+         9834                                                                                                                     
+           40                                                                                                                     
+         1234                                                                                                                     
+          323                                                                                                                     
+           21                                                                                                                     
+          777                                                                                                                     
+          533                                                                                                                     
+          -87                                                                                                                     
+           25                                                                                                                     
+           78                                                                                                                     
+ NUMBER OF ENTRIES:                                                                                                               
+           20                                                                                                                     
+                                                                                                                                  
+ EVEN NUMBERS IN TABLE:                                                                                                           
+ NUMS PER LINE ->           3                                                                                                     
+            2          56        -984                                                                                             
+           50          66          56                                                                                             
+         9834          40        1234                                                                                             
+           78                                                                                                                     
+ NUMBER OF ENTRIES:                                                                                                               
+           10                                                                                                                     
+                                                                                                                                  
+ EVEN NUMBERS IN TABLE:                                                                                                           
+ NUMS PER LINE ->           4                                                                                                     
+            2          56        -984          50                                                                                 
+           66          56        9834          40                                                                                 
+         1234          78                                                                                                         
+ NUMBER OF ENTRIES:                                                                                                               
+           10                                                                                                                     
+0*** EXECUTION TIME =    0.001 SECS.       972 INSTRUCTIONS EXECUTED -   972000 INSTRUCTIONS/SEC ***                              
+0*** AM004 - NORMAL USER TERMINATION BY RETURN ***                                                                                

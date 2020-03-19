@@ -1,0 +1,171 @@
+//KC03GFCA JOB ,'VICTOR',MSGCLASS=H                                    
+//STEP1 EXEC PGM=ASSIST,PARM='MACRO=F'                                 
+//STEPLIB DD DSN=KC02293.ASSIST.LOADLIB,DISP=SHR                        
+//SYSIN DD *                                                           
+*******************************************************************     
+*Victor Amaro                                                     *    
+*Dr. Jim Leon                                                     *    
+*CSCI 360, Section 2                                              *    
+*TA: Grace                                                        *    
+*z1747708                                                         *    
+*Assignment 5: Create different routines.                         *     
+*              One to build a table                               *   
+*              One to print the table                             *    
+*              One to print certain elements in the table         *     
+*******************************************************************     
+MAIN    CSECT                                                           
+        USING MAIN,R15                                                 
+        BAL R13,BUILD                               CALL BUILD ROUTINE  
+        XDUMP TABLE,600                             DUMP PUT TABLE     
+        BAL R13,PRINT                               CALL PRINT ROUTINE  
+        BAL R13,CHECK                               CALL CHECK ROUTINE  
+        BR R14                                      EXIT PROGRAM       
+***************************************************                     
+*NAME: BUILD                                      *                    
+*FUNCTION: BUILDS THE TABLE                       *                    
+*REG USEAGE: R12 - TABLE PTR                      *                     
+*            R13 - GO BACK TO MAIN                *                     
+***************************************************                     
+BUILD   DS 0H                                       BUILD STARTS HERE   
+        LA R12,TABLE                                POINT TO THE TABLE  
+*                                                                       
+DO      XREAD CARD,80                               READ REC            
+        BC B'0100',ENDDO                            CHECK FOR EOF       
+        MVC 0(32,R12),CARD                          PUT NAME IN TABLE  
+        LA R12,32(R12)                              BUMP TABLE          
+        B DO                                        BACK TO DO         
+ENDDO   ST R12,EOT                                  SAVE EOT           
+        BR R13                                      BACK TO MAIN       
+***************************************************                    
+*               BUILD STORAGE                     *                     
+***************************************************                    
+CARD  DC 20CL4'CARD'                                80 BYTE CARD       
+TABLE DC 20CL32'ENTRY'                              TABLE               
+EOT   DC F'-5'                                      EOT SAVED HERE      
+*                                                                      
+*                                                                     
+***************************************************                    
+*NAME: PRINT                                      *                    
+*FUNCTION: PRINTS THE TABLE                       *                    
+*REG USEAGE: R12 - TABLE PTR                      *                    
+*            R13 - BACK TO MAIN                   *                     
+*            R10 - PLINE PTR                      *                    
+*            R11 - HOLDS EOT                      *                    
+***************************************************                   
+PRINT   DS 0H                                       PRINT STARTS HERE   
+        XPRNT =CL24' ALL ENTRIES FROM TABLE',24     PRINT HEADER        
+        LA R12,TABLE                                RESET TABLE PTR     
+        LA R10,PLINE+1                            POINT TO PLINE+1     
+        L  R11,EOT                                LOAD EOT INTO R11     
+DO2     CR R12,R11                                END OF TABLE REACHED? 
+        BE ENDDO2                                 IF YES, GO TO ENDDO2  
+        MVC PLINE+1(32),0(R12)                    PULL NAME FROM TABLE  
+        LA R12,32(R12)                              BUMP TABLE          
+        XPRNT PLINE,100                             PRINT THE NAME      
+        MVI PLINE,C' '                            MOVE BLANK TO PLINE   
+        MVC PLINE+1(99),PLINE                     CLEAR REST OF PLINE   
+        B DO2                                       BACK TO TOP        
+ENDDO2  BR R13                                      BACK TO MAIN        
+***************************************************                    
+*               PRINT STORAGE                     *                    
+***************************************************                    
+PLINE DC CL100' '                                   PLINE FOR NAMES    
+*                                                                     
+*                                                                     
+***************************************************                  
+*NAME: CHECK                                      *                   
+*FUNCTION: CHECKS FOR CERTAIN NAMES               *                    
+*REG USEAGE: R12 - TABLE PTR                      *                  
+*            R13 - BACK TO MAIN                   *                    
+*            R11 - HOLDS THE EOT                  *                    
+*            R9  - COUNT FOR '*'                  *                    
+*            R8  - COUNT FOR 'ANDY'               *                   
+*            R6  - TEMP NAME HOLDER FOR * SEARCH  *                    
+*            R5  - CYCLE THROUGH CHAR COUNTER     *                    
+***************************************************                     
+CHECK   DS 0H                                       CHECK STARTS HERE   
+        XPRNT =CL2' ',2                             NEW LINE            
+        XPRNT =CL23' FROM CHECK SUBROUTINE',23      PRINT HEADER        
+        LA R12,TABLE                                RESET TABLE PTR    
+        SR R8,R8                                 ANDY COUNT TO ZERO     
+        SR R9,R9                                 * COUNT TO ZERO        
+DO3     C  R12,EOT                                  EOT REACHED?       
+        BE ENDDO3                                   YES, TO ENDDO3      
+        BH DIE                                   SOMETHING WENT WRONG 
+        SR R5,R5                                 CHAT COUNT TO ZERO     
+        MVC TEMPNAME(32),0(R12)                  MOVE NAME INTO TEMP   
+IF      CLC TEMPNAME(4),=CL4'ANDY'               IS NAME ANDY?          
+        BNE REPLACE                              NO,GO TO REPLACE       
+        XPRNT =CL12' ANDY FOUND:',12             FOUND ANDY HEADER      
+        MVC ANDYP+1(32),0(R12)                   MOVE NAME TO A PLINE  
+        XPRNT ANDYP,32                           PRINT PLINE(NAME)      
+        XPRNT =CL2' ',2                          NEW LINE               
+        LA R8,1(R8)                              ADD ONE TO ANDY COUNT  
+REPLACE DS 0H                                                           
+        LA  R6,TEMPNAME                          NAME INTO TEMP REG     
+TOP     C R5,TT                                  CHECK FOR 33           
+        BE ENDIF                                 REACHED? GO TO ENDIF   
+        BH DIE                                   SOMETING WENT WRONG    
+ELSEIF  CLI 0(R6),C'*'                           IS CHAR == *?         
+        BNE ENDIF1                               NO, GO TO ENDIF        
+        XPRNT =CL9' * FOUND:',9                  FOUND * HEADER         
+        MVC ASTP+1(32),TEMPNAME               MOVE NAME TO A PLINE     
+        XPRNT ASTP,32                            PRINT PLINE(NAME)      
+        XPRNT =CL2' ',2                          NEW LINE               
+        LA R9,1(R9)                              ADD ONE TO * COUNTER   
+        B ENDIF                                  GO TO ENDIF            
+ENDIF1  DS 0H                                                           
+        LA R6,1(R6)                             CYCLE THROUGH THE NAME  
+        LA R5,1(R5)                                 CHAR COUNTER        
+        B TOP                                       BACK TO TOP         
+ENDIF   LA R12,32(R12)                              BUMP TABLE         
+        B DO3                                       BACK TO TOP         
+ENDDO3  XPRNT =CL23' NUMBER OF ANDYS FOUND:',23     ANDY FOUND HEADER   
+        XDECO R8,OUTPT                           PREPARE TO PRINT COUNT 
+        XPRNT PLINE2,13                             PRINT ANDY COUNT    
+        XPRNT =CL20' NUMBER OF *S FOUND:',20        * FOUND HEADER      
+        XDECO R9,OUTPT                           PREPARE TO PRINT COUNT 
+        XPRNT PLINE2,13                             PRINT * COUNT       
+        BR 13                                       BACK TO MAIN        
+***************************************************                    
+*               CHECK STORAGE                     *                    
+***************************************************                    
+PLINE2 DC CL1' '                                    CARRIAGE CONTROL    
+OUTPT DC CL12'OUTPT'                                OUTPUT FOR COUNTS   
+ANDYP DC CL32' '                                    TO PRINT ANDY NAME  
+ASTP  DC CL32' '                                    TO PRINT * NAME     
+TEMPNAME DC CL32' '                                 TEMP LOC FOR NAME   
+DIE DC F'00'                                        ERROR CHECKING      
+TT DC F'33'                                                            
+*                                                                     
+*                                                                       
+R15  EQU  15                                                           
+R14  EQU  14                                                            
+R13  EQU  13                                                        
+R12  EQU  12                                                          
+R11  EQU  11                                                       
+R10  EQU  10                                                    
+R9   EQU   9                                                      
+R8   EQU   8                                                      
+R7   EQU   7                                                      
+R6   EQU   6                                                        
+R5   EQU   5                                                        
+     LTORG                                                        
+     END                                                           
+/*                                                                   
+//FT05F001 DD *                                                  
+BOB      THOMAS                                                        
+ANDY     JORDAN                                                       
+TOM      THOMPSON                                                      
+*IKE     TRUST                                                        
+AMDY     JENSAZ                                                     
+WALT     JACKSON*                                                   
+*TONY    PARKER                                               
+SALL*Y   SMITH                                                   
+MIK*     MOUSE                                                   
+SANDY    RANTOUL                                                  
+ANDY     ROGERS                                                    
+ANDY     CUR**                                                    
+JOEY     LEVINE                                                    
+/*                                                                   
+//SYSPRINT DD SYSOUT=*                                                

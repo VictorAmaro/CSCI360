@@ -1,0 +1,38 @@
+***********************************************                                  
+*VICTOR AMARO                                 *                                  
+*DR.JIM LEON                                  *                                    
+*CSCI 360, SECTION 2                          *                                   
+*ASSIGNMENT 1                                 *
+*                                             *
+*Program that subtracts  N1 from  N2.         *  
+*  N1 is a fullword of 15 in storage.         *
+*  N2 is a fullword of 25 in storage.         *
+*  The answer is 10 decimal.                  *                                                            
+***********************************************                                 
+//KC03GFCA JOB ,'VICTOR',MSGCLASS=H                                  
+//STEP1 EXEC PGM=ASSIST,PARM='MACRO=F'                              
+//STEPLIB DD DSN=KC02293.ASSIST.LOADLIB,DISP=SHR                   
+//SYSIN DD *
+
+MAIN   CSECT                                                         
+       USING MAIN,15                                                
+       L R1,32(R0,R15)   BRING IN NUM1                             
+       L R2,36(R0,R15)   BRING IN NUM2                              
+       S R2,32(R0,R15)   SUBTRACT NUMBERS                            
+       XDUMP                                                         
+       ST R2,SUM         STORE ANSWER                               
+       XDUMP SUM,4                                                     
+       BR R14            EXIT                                         
+***************************************************                  
+NUM1 DC F'15'            FULLWORD1                                    
+NUM2 DC F'25'            FULLWORD2                                      
+SUM  DC F'0'             SUM FOR ANSWER                             
+R15  EQU 15
+R14  EQU 14                                                       
+R0   EQU  0                                                         
+R1   EQU  1                                                         
+R2   EQU  2                                                          
+R5   EQU  5                                                            
+     END                                                              
+                                                                
+//SYSPRINT DD SYSOUT=*     

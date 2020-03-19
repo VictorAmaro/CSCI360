@@ -1,0 +1,176 @@
+1                    J E S 2  J O B  L O G  --  S Y S T E M  S 0 W 1  --  N O D E  Z O S K C T R         
+0 
+ 21.44.50 JOB05493 ---- SUNDAY,    19 FEB 2017 ----
+ 21.44.50 JOB05493  IRR010I  USERID KC03GFC  IS ASSIGNED TO THIS JOB.
+ 21.44.50 JOB05493  ICH70001I KC03GFC  LAST ACCESS AT 21:43:53 ON SUNDAY, FEBRUARY 19, 2017
+ 21.44.50 JOB05493  $HASP373 KC03GFCA STARTED - INIT 2    - CLASS A        - SYS S0W1
+ 21.44.50 JOB05493  -                                         --TIMINGS (MINS.)--            ----PAGING COUNTS---
+ 21.44.50 JOB05493  -JOBNAME  STEPNAME PROCSTEP    RC   EXCP    TCB    SRB  CLOCK   SERV  PG   PAGE   SWAP    VIO SWAPS
+ 21.44.50 JOB05493  -KC03GFCA "ÿ÷[                 00     48 ******    .00     .0    142   0      0      0      0     0
+ 21.44.50 JOB05493  -KC03GFCA ENDED.  NAME-VICTOR               TOTAL TCB CPU TIME=   .00  TOTAL ELAPSED TIME=    .0
+ 21.44.50 JOB05493  $HASP395 KC03GFCA ENDED
+0------ JES2 JOB STATISTICS ------
+-  19 FEB 2017 JOB EXECUTION DATE
+-          123 CARDS READ
+-          176 SYSOUT PRINT RECORDS
+-            0 SYSOUT PUNCH RECORDS
+-           18 SYSOUT SPOOL KBYTES
+-         0.00 MINUTES EXECUTION TIME
+         1 //KC03GFCA JOB ,'VICTOR',MSGCLASS=H                                     JOB05493
+         2 //STEP1 EXEC PGM=ASSIST,PARM='MACRO=F'                                  00000200
+         3 //STEPLIB DD DSN=KC02293.ASSIST.LOADLIB,DISP=SHR                        00000300
+         4 //SYSIN DD *                                                            00000400
+         5 //FT05F001 DD *                                                         00002100
+         6 //SYSPRINT DD SYSOUT=*                                                  00003000
+ ICH70001I KC03GFC  LAST ACCESS AT 21:43:53 ON SUNDAY, FEBRUARY 19, 2017
+ IEF236I ALLOC. FOR KC03GFCA STEP1
+ IGD103I SMS ALLOCATED TO DDNAME STEPLIB
+ IEF237I JES2 ALLOCATED TO SYSIN
+ IEF237I JES2 ALLOCATED TO FT05F001
+ IEF237I JES2 ALLOCATED TO SYSPRINT
+ IEF142I KC03GFCA STEP1 - STEP WAS EXECUTED - COND CODE 0000
+ IGD104I KC02293.ASSIST.LOADLIB                       RETAINED,  DDNAME=STEPLIB 
+ IEF285I   KC03GFC.KC03GFCA.JOB05493.D0000101.?         SYSIN         
+ IEF285I   KC03GFC.KC03GFCA.JOB05493.D0000102.?         SYSIN         
+ IEF285I   KC03GFC.KC03GFCA.JOB05493.D0000103.?         SYSOUT        
+ IEF373I STEP/STEP1   /START 2017050.2144
+ IEF032I STEP/STEP1   /STOP  2017050.2144 
+         CPU:     0 HR  00 MIN  00.00 SEC    SRB:     0 HR  00 MIN  00.00 SEC    
+         VIRT:   584K  SYS:   268K  EXT:        0K  SYS:    12292K
+         ATB- REAL:                     0K  SLOTS:                     0K
+              VIRT- ALLOC:       0M SHRD:       0M
+ IEF375I  JOB/KC03GFCA/START 2017050.2144
+ IEF033I  JOB/KC03GFCA/STOP  2017050.2144 
+         CPU:     0 HR  00 MIN  00.00 SEC    SRB:     0 HR  00 MIN  00.00 SEC    
+1*** ASSIST 4.0/A2-05/15/82  470/V7A/0:OS/VS2  INS=SDFP7/X=BGHO, CHECK/TRC/=1180, OPTS=CDKMPR FROM PENN ST*NIU COMPSCI*LT         
+0MACRO=F                                                                                                                          
+0                                                                                                               PAGE    1         
+0  LOC  OBJECT CODE    ADDR1 ADDR2  STMT   SOURCE STATEMENT                                                                       
+                                       1 *******************************************************************     00000500         
+                                       2 *Victor Amaro                                                     *     00000600         
+                                       3 *Dr. Jim Leon                                                     *     00000700         
+                                       4 *CSCI 360, Section 2                                              *     00000800         
+                                       5 *TA: Grace                                                        *     00000900         
+                                       6 *z1747708                                                         *     00001000         
+                                       7 *Assignment: Produce a weekly payroll report on hourly employees. *     00001100         
+                                       8 *******************************************************************     00001200         
+ 000000                                9 MAIN    CSECT                                                           00001300         
+ 000000                               10         USING MAIN,R15                                 BASE REG         00001400         
+ 000000 E020 F108 0015 00108          11         XPRNT PLINE1,21                                PRINT 1ST HEADER 00001410         
+ 000006 E020 F11D 0033 0011D          12         XPRNT PLINE2,51                                PRINT 2ND HEADER 00001420         
+ 00000C 1B88                          13         SR R8,R8                                       ZERO 0 TOTAL PAY 00001421         
+ 00000E 1B44                          14         SR R4,R4                                       HIGHEST PAY VAR  00001422         
+ 000010 5890 F0A8            000A8    15         L  R9,BG                                    SET LOWEST DEFAULT  00001425         
+                                      16 *                                                                       00001430         
+ 000014 E000 F0B8 0050 000B8          17 TOP     XREAD CARD,80                                  READ RECORD      00001440         
+ 00001A 4740 F088            00088    18         BC B'0100',EXIT                                CHECK FOR EOF    00001450         
+ 00001E 5330 F0B8            000B8    19         XDECI R3,CARD                                  GET WORKED HOURS 00001451         
+ 000022 5351 0000            00000    20         XDECI R5,0(R1)                                 GET PAYRATE      00001452         
+ 000026 5371 0000            00000    21         XDECI R7,0(R1)                                 GET BONUS AMOUNT 00001453         
+ 00002A 1B66                          22         SR R6,R6                                       RESET TOTAL PAY  00001455         
+ 00002C 5930 F0B0            000B0    23 IF      C R3,FORTY                                     IF HOURS>40      00001456         
+ 000030 47D0 F052            00052    24         BC B'1101',ELSE                    IF LESS THAN, GO TO ELSE     00001457         
+ 000034 5B30 F0B0            000B0    25         S R3,FORTY                                     FIND OT HRS      00001458         
+ 000038 18D3                          26         LR R13,R3                                    LOAD OT HRS TO R13 00001459         
+ 00003A 5830 F0B0            000B0    27         L R3,FORTY                                   LOAD 40(HRS) TO R3 00001460         
+ 00003E 1C25                          28         MR R2,R5                                       FIND BASEPAY     00001461         
+ 000040 18B5                          29         LR R11,R5                          LOAD BASEPAY INTO TEMP VAR   00001462         
+ 000042 5CA0 F0B4            000B4    30         M R10,ONE                                   PREPARE FOR DIVSION 00001463         
+ 000046 5DA0 F0AC            000AC    31         D R10,TWO                          DIVIDE BY 2 TO FIND OT RATE  00001464         
+ 00004A 1AB5                          32         AR R11,R5                                      OT PAYRATE       00001465         
+ 00004C 1CCB                          33         MR R12,R11                                     FIND OT PAY      00001466         
+ 00004E 47F0 F056            00056    34         BC B'1111',ENDIF                   THE END OF THE IF BODY       00001467         
+ 000052                               35 ELSE    DS 0H                                          ELSE HOURS<40    00001468         
+ 000052 1C25                          36         MR R2,R5                                       FIND BASEPAY     00001469         
+ 000054 1BDD                          37         SR R13,R13                              ZERO OVERTIME HOURS     00001470         
+ 000056                               38 ENDIF   DS 0H                                                           00001471         
+ 000056 1A67                          39         AR R6,R7                                (BONUS)ADD TO TOTAL PAY 00001472         
+ 000058 1A6D                          40         AR R6,R13                          (OT PAYRATE)ADD TO TOTAL PAY 00001473         
+ 00005A 1A63                          41         AR R6,R3                             (BASE PAY)ADD TO TOTAL PAY 00001474         
+ 00005C 1964                          42 IF2     CR R6,R4                           CURRENT TOTAL > HIGHEST PAY  00001480         
+ 00005E 47D0 F064            00064    43         BC B'1101',ENDIF2                       IF NOT, GO TO ENDIF2    00001481         
+ 000062 1846                          44         LR R4,R6                                       NEW HIGHEST PAY  00001482         
+ 000064                               45 ENDIF2  DS 0H                                          END OF IF BODY   00001483         
+ 000064 1969                          46 IF3     CR R6,R9                           CURRENT TOAL < LOWEST PAY    00001484         
+ 000066 47B0 F06C            0006C    47         BNL ENDIF3                              IF NOT, GO TO ENDIF3    00001485         
+ 00006A 1896                          48         LR R9,R6                                       NEW LOWEST PAY   00001486         
+ 00006C                               49 ENDIF3  DS 0H                                          END OF IF BODY   00001488         
+ 00006C 1A86                          50         AR R8,R6                                KEEP TRACK OF WHOLE PAY 00001490         
+ 00006E 5230 F1A2            001A2    51         XDECO R3,OUTPT1                      (BASE PAY)PREPARE TO PRINT 00001491         
+ 000072 52D0 F1AE            001AE    52         XDECO R13,OUTPT2                       (OT PAY)PREPARE TO PRINT 00001492         
+1                                                                                                               PAGE    2         
+0  LOC  OBJECT CODE    ADDR1 ADDR2  STMT   SOURCE STATEMENT                                                                       
+ 000076 5270 F1BA            001BA    53         XDECO R7,OUTPT3                         (BONUS)PREPARE TO PRINT 00001493         
+ 00007A 5260 F1C6            001C6    54         XDECO R6,OUTPT4                     (TOTAL PAY)PREPARE TO PRINT 00001500         
+ 00007E E020 F1A0 0032 001A0          55         XPRNT PLINE4,50                                PRINT PAY INFO   00001510         
+ 000084 47F0 F014            00014    56         B TOP                                          GO TO TOP        00001515         
+                                      57 *                                                                       00001516         
+ 000088 5280 F162            00162    58 EXIT    XDECO R8,OUTPT5                     (WHOLE PAY)PREPARE TO PRINT 00001518         
+ 00008C E020 F14F 0020 0014F          59         XPRNT PLINE3,32                                PRINT WHOLE PAY  00001520         
+ 000092 5240 F17B            0017B    60         XDECO R4,OUTPT6                   (HIGHEST PAY)PREPARE TO PRINT 00001521         
+ 000096 E020 F16E 0019 0016E          61         XPRNT PLINE5,25                               PRINT HIGHEST PAY 00001522         
+ 00009C 5290 F194            00194    62         XDECO R9,OUTPT7                   (LOWEST PAY)PREPARE TO PRINT  00001523         
+ 0000A0 E020 F187 0019 00187          63         XPRNT PLINE6,25                               PRINT LOWEST PAY  00001524         
+ 0000A6 07FE                          64         BR R14                                         EXIT PROGRAM     00001530         
+                                      65 **********************************                                      00001600         
+                                      66 *         MAIN STORAGE           *                                      00001700         
+                                      67 **********************************                                      00001800         
+ 0000A8 0000270F                      68 BG     DC F'9999'                                      FULLWORD         00001801         
+ 0000AC 00000002                      69 TWO    DC F'2'                                         FULLWORD  2      00001802         
+ 0000B0 00000028                      70 FORTY  DC F'40'                                        FULLWORD 40      00001803         
+ 0000B4 00000001                      71 ONE    DC F'1'                                         FULLWORD  1      00001804         
+ 0000B8 C3C1D9C4C3C1D9C4              72 CARD   DC 20CL4'CARD'                                  80 BYTE CARD     00001810         
+ 000108 40                            73 PLINE1 DC CL1' '                                       CARRIAGE CONTROL 00001820         
+ 000109 4040404040404040              74        DC CL20'         NIU PAYROLL'                     HEADER2        00001830         
+ 00011D 40                            75 PLINE2 DC CL1' '                                       CARRIAGE CONTROL 00001840         
+ 00011E 4040404040C2C1E2              76        DC CL49'     BASE PAY    OVERTIME    BONUS      TOTAL PAY'       00001850         
+ 00014F 40                            77 PLINE3 DC CL1' '                                       CARRIAGE CONTROL 00001860         
+ 000150 E3D6E3C1D340D7C1              78        DC CL18'TOTAL PAY AMOUNT:'                      WHOLE PAY HEADER 00001861         
+ 000162 D6E4E3D7E3404040              79 OUTPT5 DC CL12'OUTPT'                                  WHOLE PAY OUTPUT 00001862         
+ 00016E 40                            80 PLINE5 DC CL1' '                                       CARRIAGE CONTROL 00001863         
+ 00016F C8C9C7C8C5E2E340              81        DC CL12'HIGHEST PAY:'                         HIGHEST PAY HEADER 00001864         
+ 00017B D6E4E3D7E3404040              82 OUTPT6 DC CL12'OUTPT'                                HIGHEST PAY AMOUNT 00001865         
+ 000187 40                            83 PLINE6 DC CL1' '                                       CARRIAGE CONTROL 00001866         
+ 000188 D3D6E6C5E2E340D7              84        DC CL12'LOWEST PAY:'                          LOWEST PAY HEADER  00001867         
+ 000194 D6E4E3D7E3404040              85 OUTPT7 DC CL12'OUTPT'                                LOWEST PAY AMOUNT  00001868         
+ 0001A0 40                            86 PLINE4 DC CL1' '                                       CARRIAGE CONTROL 00001869         
+ 0001A1 40                            87        DC CL1' '                                                        00001870         
+ 0001A2 D6E4E3D7E3404040              88 OUTPT1 DC CL12'OUTPT'                                  BASEPAY OUTPUT   00001871         
+ 0001AE D6E4E3D7E3404040              89 OUTPT2 DC CL12'OUTPT'                                  OVERTIME OUTPUT  00001880         
+ 0001BA D6E4E3D7E3404040              90 OUTPT3 DC CL12'OUTPT'                                  BONUS OUTPUT     00001890         
+ 0001C6 D6E4E3D7E3404040              91 OUTPT4 DC CL12'OUTPT'                                  TOTAL PAY OUTPUT 00001891         
+ 00000F                               92 R15  EQU  15                                                            00001900         
+ 00000E                               93 R14  EQU  14                                                            00001910         
+ 00000D                               94 R13  EQU  13                                                            00001911         
+ 00000C                               95 R12  EQU  12                                                            00001912         
+ 00000B                               96 R11  EQU  11                                                            00001913         
+ 00000A                               97 R10  EQU  10                                                            00001914         
+ 000009                               98 R9   EQU   9                                                            00001915         
+ 000008                               99 R8   EQU   8                                                            00001916         
+ 000007                              100 R7   EQU   7                                                            00001917         
+ 000006                              101 R6   EQU   6                                                            00001918         
+ 000005                              102 R5   EQU   5                                                            00001919         
+ 000004                              103 R4   EQU   4                                                            00001920         
+ 000003                              104 R3   EQU   3                                                            00001921         
+ 000002                              105 R2   EQU   2                                                            00001922         
+ 000001                              106 R1   EQU   1                                                            00001923         
+ 000000                              107 R0   EQU   0                                                            00001924         
+                                     108      END                                                                00001930         
+0***  NO   STATEMENTS FLAGGED -  NO   WARNINGS,  NO   ERRORS                                                                      
+0*** DYNAMIC CORE AREA USED:  LOW:    9624 HIGH:    1076 LEAVING:  482868 FREE BYTES. AVERAGE:       98 BYTES/STMT ***            
+1*** ASSEMBLY TIME =    0.000 SECS,   109000 STATEMENTS/SEC ***                                                                   
+0*** PROGRAM EXECUTION BEGINNING - ANY OUTPUT BEFORE EXECUTION TIME MESSAGE IS PRODUCED BY USER PROGRAM ***                       
+          NIU PAYROLL                                                                                                             
+      BASE PAY    OVERTIME    BONUS      TOTAL PAY                                                                                
+           800          90        1500        2390                                                                                
+           450           0        1000        1450                                                                                
+           960           0           0         960                                                                                
+          1400         104        1900        3404                                                                                
+          1200         900        1700        3800                                                                                
+           400         105        2000        2505                                                                                
+           750           0        1000        1750                                                                                
+ TOTAL PAY AMOUNT:        16259                                                                                                   
+ HIGHEST PAY:        3800                                                                                                         
+ LOWEST PAY:          960                                                                                                         
+0*** EXECUTION TIME =    0.000 SECS.       220 INSTRUCTIONS EXECUTED -   220000 INSTRUCTIONS/SEC ***                              
+0*** AM004 - NORMAL USER TERMINATION BY RETURN ***                                                                                

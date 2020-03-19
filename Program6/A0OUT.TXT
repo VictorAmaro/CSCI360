@@ -1,0 +1,192 @@
+1                    J E S 2  J O B  L O G  --  S Y S T E M  S 0 W 1  --  N O D E  Z O S K C T R         
+0 
+ 15.57.12 JOB03085 ---- TUESDAY,   04 APR 2017 ----
+ 15.57.12 JOB03085  IRR010I  USERID KC03GFC  IS ASSIGNED TO THIS JOB.
+ 15.57.12 JOB03085  ICH70001I KC03GFC  LAST ACCESS AT 15:56:48 ON TUESDAY, APRIL 4, 2017
+ 15.57.12 JOB03085  $HASP373 KC03GFCA STARTED - INIT 2    - CLASS A        - SYS S0W1
+ 15.57.12 JOB03085  -                                         --TIMINGS (MINS.)--            ----PAGING COUNTS---
+ 15.57.12 JOB03085  -JOBNAME  STEPNAME PROCSTEP    RC   EXCP    TCB    SRB  CLOCK   SERV  PG   PAGE   SWAP    VIO SWAPS
+ 15.57.12 JOB03085  -KC03GFCA                      00     52 ******    .00     .0    150   0      0      0      0     0
+ 15.57.12 JOB03085  -KC03GFCA ENDED.  NAME-VICTOR               TOTAL TCB CPU TIME=   .00  TOTAL ELAPSED TIME=    .0
+ 15.57.12 JOB03085  $HASP395 KC03GFCA ENDED
+0------ JES2 JOB STATISTICS ------
+-  04 APR 2017 JOB EXECUTION DATE
+-          122 CARDS READ
+-          192 SYSOUT PRINT RECORDS
+-            0 SYSOUT PUNCH RECORDS
+-           19 SYSOUT SPOOL KBYTES
+-         0.00 MINUTES EXECUTION TIME
+         1 //KC03GFCA JOB ,'VICTOR',MSGCLASS=H                                     JOB03085
+         2 //STEP1 EXEC PGM=ASSIST,PARM='MACRO=F'                                  00000200
+         3 //STEPLIB DD DSN=KC02293.ASSIST.LOADLIB,DISP=SHR                        00000300
+         4 //SYSIN DD *                                                            00000400
+         5 //FT05F001 DD *                                                         00003900
+         6 //SYSPRINT DD SYSOUT=*                                                  00004800
+ ICH70001I KC03GFC  LAST ACCESS AT 15:56:48 ON TUESDAY, APRIL 4, 2017
+ IEF236I ALLOC. FOR KC03GFCA STEP1
+ IGD103I SMS ALLOCATED TO DDNAME STEPLIB
+ IEF237I JES2 ALLOCATED TO SYSIN
+ IEF237I JES2 ALLOCATED TO FT05F001
+ IEF237I JES2 ALLOCATED TO SYSPRINT
+ IEF142I KC03GFCA STEP1 - STEP WAS EXECUTED - COND CODE 0000
+ IGD104I KC02293.ASSIST.LOADLIB                       RETAINED,  DDNAME=STEPLIB 
+ IEF285I   KC03GFC.KC03GFCA.JOB03085.D0000101.?         SYSIN         
+ IEF285I   KC03GFC.KC03GFCA.JOB03085.D0000102.?         SYSIN         
+ IEF285I   KC03GFC.KC03GFCA.JOB03085.D0000103.?         SYSOUT        
+ IEF373I STEP/STEP1   /START 2017094.1557
+ IEF032I STEP/STEP1   /STOP  2017094.1557 
+         CPU:     0 HR  00 MIN  00.00 SEC    SRB:     0 HR  00 MIN  00.00 SEC    
+         VIRT:   584K  SYS:   268K  EXT:        0K  SYS:    12108K
+         ATB- REAL:                     0K  SLOTS:                     0K
+              VIRT- ALLOC:       0M SHRD:       0M
+ IEF375I  JOB/KC03GFCA/START 2017094.1557
+ IEF033I  JOB/KC03GFCA/STOP  2017094.1557 
+         CPU:     0 HR  00 MIN  00.00 SEC    SRB:     0 HR  00 MIN  00.00 SEC    
+1*** ASSIST 4.0/A2-05/15/82  470/V7A/0:OS/VS2  INS=SDFP7/X=BGHO, CHECK/TRC/=1180, OPTS=CDKMPR FROM PENN ST*NIU COMPSCI*LT         
+0MACRO=F                                                                                                                          
+0                                                                                                               PAGE    1         
+0  LOC  OBJECT CODE    ADDR1 ADDR2  STMT   SOURCE STATEMENT                                                                       
+                                       1 *******************************************************************     00000500         
+                                       2 *                   FREE EXTENSION                                *     00000510         
+                                       3 *Victor Amaro                                                     *     00000600         
+                                       4 *Dr. Jim Leon                                                     *     00000700         
+                                       5 *CSCI 360, Section 2                                              *     00000800         
+                                       6 *TA: Grace                                                        *     00000900         
+                                       7 *z1747708                                                         *     00001000         
+                                       8 *Assignment 6: PREPARE A PAYROLL REPORT                           *     00001100         
+                                       9 *******************************************************************     00001500         
+ 000000                               10 MAIN    CSECT                                                           00001600         
+ 000000                               11         USING MAIN,R15                                                  00001700         
+ 000000 E020 F29C 002B 0029C          12         XPRNT =CL43' EMPLOY# BASEPAY OVERTIME BONUS PAYAMT NAME',43     00001710         
+                                      13 *                                                                       00001720         
+ 000006 E000 F1F6 0050 001F6          14 TOP     XREAD CARD,80                                     READ RECORD   00001730         
+ 00000C 4740 F0E8            000E8    15         BC B'0100',EXIT                                   CHECK FOR EOF 00001740         
+ 000010 F211 F1D8 F1F6 001D8 001F6    16         PACK ENUM(2),INNUM(2)                           PACK EMPLOY NUM 00001750         
+ 000016 F211 F1DA F1F9 001DA 001F9    17         PACK HRS(2),INHRS(2)                            PACK EMPLOY HRS 00001760         
+ 00001C F211 F1DC F1FC 001DC 001FC    18         PACK PAY(2),INPAY(2)                            PACK PAYRATE    00001761         
+ 000022 F233 F1DE F1FF 001DE 001FF    19         PACK BONUS(4),INBON(4)                          PACK BONUS AMT  00001762         
+ 000028 FB33 F1CD F1CD 001CD 001CD    20         SP TPAY(4),TPAY(4)                           RESET TOTALPAY     00001763         
+ 00002E FB33 F1C9 F1C9 001C9 001C9    21         SP OTRATE(4),OTRATE(4)                       RESET OTPAY        00001764         
+ 000034 F911 F1DA F1C1 001DA 001C1    22 IF      CP HRS(2),FORTY(2)                           IS HRS > 40?       00001765         
+ 00003A 47D0 F072            00072    23         BNH ELSE                                     YES, GO TO ELSE    00001766         
+ 00003E F831 F1C5 F1DC 001C5 001DC    24         ZAP BASEPAY(4),PAY(2)                      LOAD RATE INTO TEMP  00001767         
+ 000044 FC31 F1C5 F1C1 001C5 001C1    25         MP BASEPAY(4),FORTY(2)                      HRS * RATE          00001768         
+ 00004A F831 F1C9 F1DA 001C9 001DA    26         ZAP OTRATE(4),HRS(2)                       MOVE HRS TO TEMP     00001770         
+ 000050 FB31 F1C9 F1C1 001C9 001C1    27         SP OTRATE(4),FORTY(2)                      FIND OT HRS          00001771         
+ 000056 FC31 F1C9 F1C3 001C9 001C3    28         MP OTRATE(4),FIFTY(2)                      FIND OT RATE         00001772         
+ 00005C FA33 F1CD F1DE 001CD 001DE    29         AP TPAY(4),BONUS(4)                        ADD TO TOTALPAY      00001774         
+ 000062 FA33 F1CD F1C5 001CD 001C5    30         AP TPAY(4),BASEPAY(4)                      ADD TO TOTALPAY      00001775         
+ 000068 FA33 F1CD F1C9 001CD 001C9    31         AP TPAY(4),OTRATE(4)                       ADD TO TOTALPAY      00001776         
+ 00006E 47F0 F090            00090    32         B ENDIF                                      GO TO ENDIF        00001777         
+ 000072                               33 ELSE    DS 0H                                       ELSE HRS > 40       00001778         
+ 000072 F831 F1C5 F1DC 001C5 001DC    34         ZAP BASEPAY(4),PAY(2)                      LOAD RATE INTO TEMP  00001779         
+ 000078 FC31 F1C5 F1DA 001C5 001DA    35         MP BASEPAY(4),HRS(2)                       HRS * RATE           00001780         
+ 00007E FB33 F1C9 F1C9 001C9 001C9    36         SP OTRATE(4),OTRATE(4)                     NO OTRATE            00001781         
+ 000084 FA33 F1CD F1C5 001CD 001C5    37         AP TPAY(4),BASEPAY(4)                      ADD TO TOTAL PAY     00001782         
+ 00008A FA33 F1CD F1DE 001CD 001DE    38         AP TPAY(4),BONUS(4)                        ADD TO TOTAL PAY     00001783         
+ 000090                               39 ENDIF   DS 0H                                       END OF IF           00001784         
+ 000090 D203 F13F F268 0013F 00268    40         MVC PLINE+1(4),=XL4'40212020'               PATTERN FOR EMPLOY# 00001785         
+ 000096 DE03 F13F F1D8 0013F 001D8    41         ED PLINE+1(4),ENUM                        MOVE EMPLOY# TO PLINE 00001786         
+ 00009C D209 F144 F26C 00144 0026C    42         MVC PLINE+6(10),=XL10'4020202021202020204B' BAEPAYPATTERN       00001787         
+ 0000A2 DE09 F144 F1C5 00144 001C5    43         ED PLINE+6(10),BASEPAY                   MOVE BASEPAY TO PLINE  00001788         
+ 0000A8 D207 F14D F248 0014D 00248    44         MVC PLINE+15(8),=XL8'4020202021202020'   PATTERN FOR OT RATE    00001789         
+ 0000AE DE07 F14D F1C9 0014D 001C9    45         ED PLINE+15(8),OTRATE                    OT RATE TO PLINE       00001790         
+ 0000B4 D207 F155 F276 00155 00276    46         MVC PLINE+23(8),=XL10'40202020202120202020' BONUS PATTERN       00001791         
+ 0000BA DE07 F155 F1DE 00155 001DE    47         ED PLINE+23(8),BONUS                       MOVE BONUS TO PLINE  00001792         
+ 0000C0 D207 F15D F248 0015D 00248    48         MVC PLINE+31(8),=XL8'4020202021202020'   PATTERN FOR TOTALPAY   00001793         
+ 0000C6 DE07 F15D F1CD 0015D 001CD    49         ED PLINE+31(8),TPAY                      TOTALPAY TO PLINE      00001794         
+ 0000CC D209 F169 F204 00169 00204    50         MVC PLINE+43(10),INNAME                    MOVE NAME TO PLINE   00001795         
+ 0000D2 E020 F13E 0064 0013E          51         XPRNT PLINE,100                            PRINT PLINE          00001796         
+ 0000D8 FA02 F1C0 F1D5 001C0 001D5    52         AP EPLYCNT(1),NUM(3)                       ADD 1 TO EMPLOY CNT  00001797         
+1                                                                                                               PAGE    2         
+0  LOC  OBJECT CODE    ADDR1 ADDR2  STMT   SOURCE STATEMENT                                                                       
+ 0000DE FA33 F1D1 F1CD 001D1 001CD    53         AP WPAY(4),TPAY(4)                       KEEP TRACK OF WHOLEPAY 00001798         
+ 0000E4 47F0 F006            00006    54         B TOP                                           BACK TO TOP     00001799         
+ 0000E8                               55 EXIT    DS 0H                                                           00001800         
+ 0000E8 E020 F280 0002 00280          56         XPRNT =CL2' ',2                             NEW LINE            00001801         
+ 0000EE E020 F250 0010 00250          57         XPRNT =CL16' TOTAL PAY AMNT:',16            TOTAL PAY HEADER    00001802         
+ 0000F4 D207 F1AD F260 001AD 00260    58         MVC PLINE3+1(8),=XL8'4020202020202020'   PATTERN FOR WHOLEPAY   00001803         
+ 0000FA DE09 F1AD F1D1 001AD 001D1    59         ED PLINE3+1(10),WPAY                     WHOLEPAY TO PLINE      00001804         
+ 000100 E020 F1AC 000A 001AC          60         XPRNT PLINE3,10                          PRINT PLINE            00001805         
+ 000106 E020 F2C7 0011 002C7          61         XPRNT =CL17' TOTAL EMPOLYEES:',17           TOTAL EMPLY HEADER  00001806         
+ 00010C D201 F1A3 F282 001A3 00282    62         MVC PLINE2+1(2),=XL2'402020'             PATTERN FOR EMPLOY CNT 00001807         
+ 000112 DE00 F1A3 F1C0 001A3 001C0    63         ED PLINE2+1(1),EPLYCNT                  MOVE EMPLOYCNT TO PLINE 00001808         
+ 000118 E020 F1A2 000A 001A2          64         XPRNT PLINE2,10                         PRINT PLINE             00001809         
+ 00011E FD30 F1D1 F1C0 001D1 001C0    65         DP WPAY(4),EPLYCNT(1)                   FIND THE AVG PAY        00001810         
+ 000124 E020 F284 000E 00284          66         XPRNT =CL14' AVG PAY AMNT:',14          AVG PAY  HEADER         00001811         
+ 00012A D209 F1B7 F292 001B7 00292    67         MVC PLINE4+1(10),=XL10'4020202020204B202020' PATTERN FOR AVGPAY 00001812         
+ 000130 DE07 F1B7 F1D1 001B7 001D1    68         ED PLINE4+1(8),WPAY                    AVG PAY TO PLINE         00001813         
+ 000136 E020 F1B6 000A 001B6          69         XPRNT PLINE4,10                         PRINT PLINE             00001814         
+ 00013C 07FE                          70         BR R14                                  EXIT PROGRAM            00001820         
+                                      71 **********************************                                      00001900         
+                                      72 *         MAIN STORAGE           *                                      00002000         
+                                      73 **********************************                                      00002100         
+ 00013E 4040404040404040              74 PLINE   DC CL100' '                                                     00002102         
+ 0001A2 4040404040404040              75 PLINE2  DC CL10' '                                                      00002103         
+ 0001AC 4040404040404040              76 PLINE3  DC CL10' '                                                      00002104         
+ 0001B6 4040404040404040              77 PLINE4  DC CL10' '                                                      00002105         
+ 0001C0 0C                            78 EPLYCNT DC PL1'0'                                                       00002107         
+ 0001C1 040C                          79 FORTY   DC PL2'40'                                                      00002108         
+ 0001C3 050C                          80 FIFTY   DC PL2'50'                                                      00002109         
+ 0001C5 0000000C                      81 BASEPAY DC PL4'0'                                                       00002110         
+ 0001C9 0000001C                      82 OTRATE  DC PL4'1'                                                       00002111         
+ 0001CD 0000000C                      83 TPAY    DC PL4'0'                                                       00002112         
+ 0001D1 0000000C                      84 WPAY    DC PL4'0'                                                       00002113         
+ 0001D5 00001C                        85 NUM     DC PL3'1'                                                       00002114         
+ 0001D8 C8C9                          86 ENUM    DC CL2'HI'                                                      00002115         
+ 0001DA C8C9                          87 HRS     DC CL2'HI'                                                      00002116         
+ 0001DC C8C9                          88 PAY     DC CL2'HI'                                                      00002117         
+ 0001DE C8C94040                      89 BONUS   DC CL4'HI'                                                      00002118         
+ 0001E2 D5C1D4C540404040              90 NAME    DC CL20'NAME'                                                   00002120         
+ 0001F6                               91 CARD    DS 0CL80                                        DUMMY LABEL     00002200         
+ 0001F6 C8C9                          92 INNUM   DC CL2'HI'                       IN CHAIN EMPLOYEE NUM IN CHAR  00002300         
+ 0001F8 40                            93         DC CL1' '                                       SPACE IN QUOTES 00002400         
+ 0001F9 C8C9                          94 INHRS   DC CL2'HI'                                      INHRS IN CHAR   00002500         
+ 0001FB 40                            95         DC CL1' '                                       BLANK           00002600         
+ 0001FC C8C9                          96 INPAY   DC CL2'HI'                                      IN PAY RATE     00002700         
+ 0001FE 40                            97         DC CL1' '                                       BLANK           00002800         
+ 0001FF C8C94040                      98 INBON   DC CL4'HI'                                     IN BONUS IN CHAR 00002900         
+ 000203 40                            99         DC CL1' '                                       BLANK           00003000         
+ 000204 D5C1D4C540404040             100 INNAME  DC CL20'NAME'                                  IN NAME IN CHAR  00003100         
+ 000218 C6C9D3D340404040             101 PADD    DC CL46'FILL'                             FILL CARD TO 80 BYTES 00003200         
+                                     102 *                                                                       00003210         
+                                     103 *                                                                       00003220         
+ 00000F                              104 R15  EQU  15                                                            00003300         
+ 00000E                              105 R14  EQU  14                                                            00003400         
+                                     106      LTORG                                                              00003710         
+ 000248 4020202021202020             107                =XL8'4020202021202020'                                                    
+ 000250 40E3D6E3C1D340D7             108                =CL16' TOTAL PAY AMNT:'                                                   
+ 000260 4020202020202020             109                =XL8'4020202020202020'                                                    
+1                                                                                                               PAGE    3         
+0  LOC  OBJECT CODE    ADDR1 ADDR2  STMT   SOURCE STATEMENT                                                                       
+ 000268 40212020                     110                =XL4'40212020'                                                            
+ 00026C 4020202021202020             111                =XL10'4020202021202020204B'                                               
+ 000276 4020202020212020             112                =XL10'40202020202120202020'                                               
+ 000280 4040                         113                =CL2' '                                                                   
+ 000282 2020                         114                =XL2'402020'                                                              
+ 000284 40C1E5C740D7C1E8             115                =CL14' AVG PAY AMNT:'                                                     
+ 000292 4020202020204B20             116                =XL10'4020202020204B202020'                                               
+ 00029C 40C5D4D7D3D6E87B             117                =CL43' EMPLOY# BASEPAY OVERTIME BONUS PAYAMT NAME'                        
+ 0002C7 40E3D6E3C1D340C5             118                =CL17' TOTAL EMPOLYEES:'                                                  
+                                     119      END                                                                00003720         
+0***  NO   STATEMENTS FLAGGED -  NO   WARNINGS,  NO   ERRORS                                                                      
+0*** DYNAMIC CORE AREA USED:  LOW:    9056 HIGH:    1368 LEAVING:  483144 FREE BYTES. AVERAGE:       86 BYTES/STMT ***            
+0*** ASSEMBLY TIME =    0.001 SECS,   120000 STATEMENTS/SEC ***                                                                   
+0*** PROGRAM EXECUTION BEGINNING - ANY OUTPUT BEFORE EXECUTION TIME MESSAGE IS PRODUCED BY USER PROGRAM ***                       
+ EMPLOY# BASEPAY OVERTIME BONUS PAYAMT NAME                                                                                       
+   01      800      150    1500    2450    JOHNSON                                                                                
+   20      450      000    1000    1450    SMITH                                                                                  
+   21      960      000      00     960    DOE                                                                                    
+   70     1400      100    1900    3400    MILLARD                                                                                
+   45      510      000      00     510    HEGDE                                                                                  
+   02      400      350    2000    2750    HOWE                                                                                   
+   38     1000      500    1000    2500    COOKE                                                                                  
+                                                                                                                                  
+ TOTAL PAY AMNT:                                                                                                                  
+    14020                                                                                                                         
+ TOTAL EMPOLYEES:                                                                                                                 
+ 7                                                                                                                               
+ AVG PAY AMNT:                                                                                                                    
+   2002                                                                                                                         
+0*** EXECUTION TIME =    0.000 SECS.       244 INSTRUCTIONS EXECUTED -   244000 INSTRUCTIONS/SEC ***                              
+0*** AM004 - NORMAL USER TERMINATION BY RETURN ***                                                                                

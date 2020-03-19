@@ -1,0 +1,435 @@
+1                    J E S 2  J O B  L O G  --  S Y S T E M  S 0 W 1  --  N O D E  Z O S K C T R         
+0 
+ 18.36.51 JOB08999 ---- SUNDAY,    23 APR 2017 ----
+ 18.36.51 JOB08999  IRR010I  USERID KC03GFC  IS ASSIGNED TO THIS JOB.
+ 18.36.51 JOB08999  ICH70001I KC03GFC  LAST ACCESS AT 18:36:05 ON SUNDAY, APRIL 23, 2017
+ 18.36.51 JOB08999  $HASP373 KC03GFCA STARTED - INIT 2    - CLASS A        - SYS S0W1
+ 18.36.51 JOB08999  -                                         --TIMINGS (MINS.)--            ----PAGING COUNTS---
+ 18.36.51 JOB08999  -JOBNAME  STEPNAME PROCSTEP    RC   EXCP    TCB    SRB  CLOCK   SERV  PG   PAGE   SWAP    VIO SWAPS
+ 18.36.51 JOB08999  -KC03GFCA                      00     53 ******    .00     .0    198   0      0      0      0     0
+ 18.36.51 JOB08999  -KC03GFCA ENDED.  NAME-VICTOR               TOTAL TCB CPU TIME=   .00  TOTAL ELAPSED TIME=    .0
+ 18.36.51 JOB08999  $HASP395 KC03GFCA ENDED
+0------ JES2 JOB STATISTICS ------
+-  23 APR 2017 JOB EXECUTION DATE
+-          322 CARDS READ
+-          435 SYSOUT PRINT RECORDS
+-            0 SYSOUT PUNCH RECORDS
+-           47 SYSOUT SPOOL KBYTES
+-         0.00 MINUTES EXECUTION TIME
+         1 //KC03GFCA JOB ,'VICTOR',MSGCLASS=H                                     JOB08999
+         2 //STEP1 EXEC PGM=ASSIST,PARM='MACRO=F'                                  00000200
+         3 //STEPLIB DD DSN=KC02293.ASSIST.LOADLIB,DISP=SHR                        00000300
+         4 //SYSIN DD *                                                            00000400
+         5 //FT05F001 DD *                                                         00005100
+         6 //SYSPRINT DD SYSOUT=*                                                  00006100
+ ICH70001I KC03GFC  LAST ACCESS AT 18:36:05 ON SUNDAY, APRIL 23, 2017
+ IEF236I ALLOC. FOR KC03GFCA STEP1
+ IGD103I SMS ALLOCATED TO DDNAME STEPLIB
+ IEF237I JES2 ALLOCATED TO SYSIN
+ IEF237I JES2 ALLOCATED TO FT05F001
+ IEF237I JES2 ALLOCATED TO SYSPRINT
+ IEF142I KC03GFCA STEP1 - STEP WAS EXECUTED - COND CODE 0000
+ IGD104I KC02293.ASSIST.LOADLIB                       RETAINED,  DDNAME=STEPLIB 
+ IEF285I   KC03GFC.KC03GFCA.JOB08999.D0000101.?         SYSIN         
+ IEF285I   KC03GFC.KC03GFCA.JOB08999.D0000102.?         SYSIN         
+ IEF285I   KC03GFC.KC03GFCA.JOB08999.D0000103.?         SYSOUT        
+ IEF373I STEP/STEP1   /START 2017113.1836
+ IEF032I STEP/STEP1   /STOP  2017113.1836 
+         CPU:     0 HR  00 MIN  00.01 SEC    SRB:     0 HR  00 MIN  00.00 SEC    
+         VIRT:   584K  SYS:   268K  EXT:        0K  SYS:    12364K
+         ATB- REAL:                     0K  SLOTS:                     0K
+              VIRT- ALLOC:       0M SHRD:       0M
+ IEF375I  JOB/KC03GFCA/START 2017113.1836
+ IEF033I  JOB/KC03GFCA/STOP  2017113.1836 
+         CPU:     0 HR  00 MIN  00.01 SEC    SRB:     0 HR  00 MIN  00.00 SEC    
+1*** ASSIST 4.0/A2-05/15/82  470/V7A/0:OS/VS2  INS=SDFP7/X=BGHO, CHECK/TRC/=1180, OPTS=CDKMPR FROM PENN ST*NIU COMPSCI*LT         
+0MACRO=F                                                                                                                          
+0                                                                                                               PAGE    1         
+0  LOC  OBJECT CODE    ADDR1 ADDR2  STMT   SOURCE STATEMENT                                                                       
+                                       1 *******************************************************************     00000500         
+                                       2 *Victor Amaro                                                     *     00000600         
+                                       3 *CSCI 360, Section 2                                              *     00000700         
+                                       4 *TA: Grace                                                        *     00000800         
+                                       5 *z1747708                                                         *     00000900         
+                                       6 *Assignment 8: Produce a sales report                             *     00001000         
+                                       7 *******************************************************************     00001400         
+ 000000                                8 TAB     DSECT                                                           00001410         
+ 000000                                9 $TTOTAL  DS  F        BINARY FULLWORD OF TOTAL ORDER                    00001420         
+ 000004                               10 $TPID    DS  CL6      PROD ID CHAR                                      00001430         
+ 00000A                               11 $TPRICE  DS  PL4      PRICE PACKED                                      00001440         
+ 00000E                               12 $TQUAN   DS  PL4      QUANT PACKED                                      00001450         
+ 000012                               13 $TDISC   DS  PL3      DISC PACKED                                       00001460         
+ 000015                               14 $TFILLER DS  CL11     FILL OUT DSECT                                    00001470         
+                                      15 *                                                                       00001480         
+                                      16 *                                                                       00001490         
+ 000000                               17 MAIN    CSECT                                                           00001500         
+ 000000 90EC D00C            0000C    18         STM R14,R12,12(R13)                     SAVE CALLERS REGS       00001600         
+ 000004 18CF                          19         LR R12,R15                              POINT 12 AT BUILD       00001700         
+ 000000                               20         USING MAIN,R12                          SET BASE REG FOR MAIN   00001800         
+ 000000                               21         USING TAB,R11                           SET BASE REG FOR TAB    00001810         
+ 000006 41E0 C044            00044    22         LA R14,MSAVE                            POINT TO MSAVE AREA     00001900         
+ 00000A 50ED 0008            00008    23         ST R14,8(R13)                           SET FORWARD PTR         00002000         
+ 00000E 50DE 0004            00004    24         ST R13,4(R14)                           SET BACK PTR            00002100         
+ 000012 18DE                          25         LR R13,R14                              R13 IS AT MSAVE         00002200         
+                                      26 ***                                                                     00002300         
+ 000014 4110 C364            00364    27         LA R1,BDLIST                            POINT R1 AT BDLIST      00002310         
+ 000018 58F0 C380            00380    28         L  R15,=V(BUILD)                        R15 POINTS TO SUB       00002311         
+ 00001C 05EF                          29         BALR R14,R15                            GO TO SUB,R14 IS RETURN 00002312         
+ 00001E E060 C0E0 02BC 000E0          30         XDUMP TABLE,700                         DUMP OUT TABLE          00002320         
+                                      31 *                                                                       00002400         
+ 000024 4110 C36C            0036C    32         LA R1,PRTLIST                           POINT R1 AT PRTLIST     00002410         
+ 000028 58F0 C384            00384    33         L  R15,=V(PRINT)                        R15 POINTS TO SUB       00002420         
+ 00002C 05EF                          34         BALR R14,R15                            GO TO SUB,R14 IS RETURN 00002430         
+                                      35 *                                                                       00002440         
+ 00002E 4110 C374            00374    36         LA R1,FNDLIST                           POINT R1 AT FNDLIST     00002441         
+ 000032 58F0 C388            00388    37         L  R15,=V(FIND)                         R15 POINTS TO SUB       00002442         
+ 000036 05EF                          38         BALR R14,R15                            GO TO SUB,R14 IS RETURN 00002443         
+                                      39 ***                                                                     00002450         
+ 000038 58DD 0004            00004    40         L  R13,4(R13)                           GET OUT BACK PTR        00002500         
+ 00003C 98EC D00C            0000C    41         LM R14,R12,12(R13)                      RESTORE REGS            00002600         
+ 000040                               42         DROP R11                                                        00002610         
+ 000040 07FE                          43         BR R14                                  RETURN LINKAGE          00002700         
+                                      44 ******************************************************************      00002800         
+                                      45 *                     MAIN STORAGE                               *      00002900         
+                                      46 ******************************************************************      00003000         
+ 000044 FFFFFFFFFFFFFFFF              47 MSAVE   DC 18F'-1'                                 MAIN SAVE AREA       00003100         
+ 00008C D7C1C44040404040              48 PAD     DC CL66'PAD'                                                    00003111         
+ 0000E0                               49         ORG MAIN+((*-MAIN+31)/32*32)                                    00003112         
+ 0000E0 C8C5D9C54040C9E2              50 TABLE   DC 20CL32'HERE  IS ENTRY'                  TABLE                00003113         
+ 000360 FFFFFFFB                      51 EOT     DC F'-5'                                   EOT SAVED HERE       00003114         
+ 000364 000000E000000360              52 BDLIST  DC A(TABLE,EOT)                            BUILD PARAMETER LIST 00003120         
+1                                                                                                               PAGE    2         
+0  LOC  OBJECT CODE    ADDR1 ADDR2  STMT   SOURCE STATEMENT                                                                       
+ 00036C 000000E000000360              53 PRTLIST DC A(TABLE,EOT)                            PRINT PARAMETER LIST 00003130         
+ 000374 000000E000000360              54 FNDLIST DC A(TABLE,EOT)                            FIND PARAMETER LIST  00003140         
+                                      55         LTORG                                                           00003200         
+ 000380 00000390                      56                =V(BUILD)                                                                 
+ 000384 000004C8                      57                =V(PRINT)                                                                 
+ 000388 000007C0                      58                =V(FIND)                                                                  
+                                      59 *                                                                       00003201         
+                                      60 *                                                                       00003202         
+                                      61 *******************************************************************     00003210         
+                                      62 *NAME: BUILD                                                      *     00003220         
+                                      63 *FUNCTION: BUILDS THE TABLE                                       *     00003230         
+                                      64 *REGS: R2 - TABLE POINTER                                         *     00003240         
+                                      65 *      R3 - USED TO STORE EOT                                     *     00003250         
+                                      66 *      R11 - DSECT BASE REG                                       *     00003260         
+                                      67 *******************************************************************     00003300         
+ 000390                               68 BUILD   CSECT                                    BUILD STARTS HERE      00003310         
+ 000390 90EC D00C            0000C    69         STM R14,R12,12(R13)                      SAVE CALLERS REGS      00003320         
+ 000394 18CF                          70         LR R12,R15                               POINT 12 AT BUILD      00003330         
+ 000390                               71         USING BUILD,R12                          SET BASE REG           00003340         
+ 000396 41E0 C0E8            00478    72         LA R14,BSAVE                             POINT TO BSAVE AREA    00003350         
+ 00039A 50ED 0008            00008    73         ST R14,8(R13)                            SET FORWARD PTR        00003360         
+ 00039E 50DE 0004            00004    74         ST R13,4(R14)                            SET BACK PTR           00003370         
+ 0003A2 18DE                          75         LR R13,R14                               R13 IS AT BSAVE        00003380         
+ 0003A4 9823 1000            00000    76         LM R2,R3,0(R1)                           BRING IN PARMS         00003390         
+                                      77 ***                                                                     00003400         
+ 0003A8 41B2 0000            00000    78         LA R11,0(R2)                             OVERLAY DSECT          00003401         
+ 000000                               79         USING TAB,R11                            SET DSECT BASE REG     00003402         
+ 0003AC                               80 TOP     DS 0H                                    START OF TOP LOOP      00003403         
+ 0003AC E000 C098 0050 00428          81         XREAD CARD,80                            READ REC               00003404         
+ 0003B2 4740 C066            003F6    82         BC B'0100',END                           CHECK FOR EOF          00003405         
+ 0003B6 D205 B004 C098 00004 00428    83         MVC $TPID(6),INPROD                      BRING IN PROD ID       00003406         
+ 0003BC F233 B00A C09E 0000A 0042E    84         PACK $TPRICE(4),INPRICE(4)               BRING IN PROD PRICE    00003407         
+ 0003C2 F232 B00E C0A2 0000E 00432    85         PACK $TQUAN(4),INQUAN(3)                 BRING IN PROD QUAN     00003408         
+ 0003C8 F223 B012 C0A5 00012 00435    86         PACK $TDISC(3),INDISC(4)                 BRING IN PROD DISCOUNT 00003409         
+ 0003CE F873 C090 B00A 00420 0000A    87         ZAP OUTT(8),$TPRICE(4)                   TOTAL PRICE            00003410         
+ 0003D4 FC73 C090 B00E 00420 0000E    88         MP  OUTT(8),$TQUAN(4)                    PRICE * QUANITY        00003411         
+ 0003DA FB72 C090 B012 00420 00012    89         SP  OUTT(8),$TDISC(3)                    TOTAL - DISCOUNT       00003412         
+ 0003E0 FA71 C090 C130 00420 004C0    90         AP OUTT(8),=PL2'500'                     TOTAL + 5              00003413         
+ 0003E6 4F40 C090            00420    91         CVB R4,OUTT                              TO BINARY              00003415         
+ 0003EA 5040 B000            00000    92         ST R4,$TTOTAL                            STORE TOTAL COST       00003416         
+ 0003EE 41BB 0020            00020    93         LA R11,32(R11)                           BUMP TABLE             00003417         
+ 0003F2 47F0 C01C            003AC    94         B TOP                                    BACK TO TOP            00003418         
+ 0003F6                               95 END     DS 0H                                    END OF ENDDO           00003419         
+ 0003F6 50B3 0000            00000    96         ST R11,0(R3)                             SAVE EOT               00003420         
+ 0003FA                               97         DROP R11                                 DROP                   00003421         
+                                      98 ***                                                                     00003422         
+ 0003FA 58DD 0004            00004    99         L  R13,4(R13)                            GET OUT BACK PTR       00003423         
+ 0003FE 98EC D00C            0000C   100         LM R14,R12,12(R13)                       RESTORE REGS           00003430         
+ 000402 07FE                         101         BR R14                                   GO BACK TO MAIN        00003440         
+                                     102 *******************************************************************     00003450         
+                                     103 *                     BUILD STORAGE                               *     00003460         
+                                     104 *******************************************************************     00003470         
+ 000404 000000000000000C             105 OUTPRI  DC PL8'0'                               OUT PRODUCT             00003471         
+ 00040C 00000000000C                 106 OUTDIS  DC PL6'0'                               OUT DISCOUNT            00003472         
+ 000412 000000000000000C             107 OUTQTY  DC PL8'0'                               OUT QUANITY             00003473         
+ 000420                              108         DS 0D                                                           00003474         
+ 000420 000000000000000C             109 OUTT    DC PL8'0'                               TOTAL PRICE OUT         00003475         
+1                                                                                                               PAGE    3         
+0  LOC  OBJECT CODE    ADDR1 ADDR2  STMT   SOURCE STATEMENT                                                                       
+ 000428                              110 CARD    DS 0CL80                                80 BYTE CARD            00003480         
+ 000428 D7D9D6C44040                 111 INPROD  DC CL6'PROD'                            PRODUCT ID              00003481         
+ 00042E D7D9C9C3                     112 INPRICE DC CL4'PRIC'                            PRODUCT PRICE           00003482         
+ 000432 D8E3E8                       113 INQUAN  DC CL3'QTY'                             PRODUCT QUANTITY        00003483         
+ 000435 C4C9E240                     114 INDISC  DC CL4'DIS'                             PRODUCT DISCOUNT        00003484         
+ 000439 D7C1C4C440404040             115 PADD    DC CL63'PADD'                           PADD                    00003485         
+ 000478 FFFFFFFFFFFFFFFF             116 BSAVE   DC 18F'-1'                              BUILD SAVE AREA         00003490         
+                                     117         LTORG                                                           00003491         
+ 0004C0 500C                         118                =PL2'500'                                                                 
+                                     119 *                                                                       00003492         
+                                     120 *                                                                       00003493         
+                                     121 *******************************************************************     00003494         
+                                     122 *NAME: PRINT                                                      *     00003495         
+                                     123 *FUNCTION: PRINT THE TABLEE                                       *     00003496         
+                                     124 *REGS: R2 - TABLE POINTER/TAB DESECT                              *     00003497         
+                                     125 *      R3 - EOT                                                   *     00003498         
+                                     126 *      R7 - HOLDS TOTAL                                           *     00003499         
+                                     127 *******************************************************************     00003501         
+ 0004C8                              128 PRINT   CSECT                                    PRINT STARTS HERE      00003502         
+ 0004C8 90EC D00C            0000C   129         STM R14,R12,12(R13)                      SAVE CALLERS REGS      00003503         
+ 0004CC 18CF                         130         LR R12,R15                               POINT 12 AT BUILD      00003504         
+ 0004C8                              131         USING PRINT,R12                          SET BASE REG           00003505         
+ 0004CE 41E0 C128            005F0   132         LA R14,PSAVE                             POINT TO BSAVE AREA    00003506         
+ 0004D2 50ED 0008            00008   133         ST R14,8(R13)                            SET FORWARD PTR        00003507         
+ 0004D6 50DE 0004            00004   134         ST R13,4(R14)                            SET BACK PTR           00003508         
+ 0004DA 18DE                         135         LR R13,R14                               R13 IS AT BSAVE        00003509         
+ 0004DC 9823 1000            00000   136         LM R2,R3,0(R1)                           BRING IN PARMS         00003510         
+                                     137 ***                                                                     00003511         
+ 000000                              138         USING TAB,R2                             SET DSECT BASE REG     00003513         
+ 0004E0 FB11 C126 C126 005EE 005EE   139         SP SALES(2),SALES(2)                     COUNTER TO ZERO        00003514         
+ 0004E6 FB55 C120 C120 005E8 005E8   140         SP TOTAL(6),TOTAL(6)                     COUNTER TO ZERO        00003515         
+ 0004EC 5833 0000            00000   141         L R3,0(R3)                               BRING IN EOT           00003516         
+ 0004F0 E020 C290 0002 00758         142         XPRNT =CL2' ',2                          NEW LINE               00003517         
+ 0004F6 E020 C2B2 000D 0077A         143         XPRNT =CL13' PRINT OUTPUT',13            PRINT HEADER           00003518         
+ 0004FC E020 C174 0034 0063C         144         XPRNT PLINE,52                           OBJECT HEADER          00003520         
+ 000502                              145 DO      DS 0H                                    START OF DO LOOP       00003521         
+ 000502 1923                         146         CR R2,R3                                 EOT REACHED?           00003522         
+ 000504 4780 C0AE            00576   147         BE ENDDO                                 YES, GO TO ENDDO       00003523         
+ 000508 4720 C170            00638   148         BH DIE                                   ERROR                  00003524         
+ 00050C D205 C1A9 2004 00671 00004   149         MVC PLINE2+1(6),$TPID                    PROD ID TO PLINE       00003525         
+                                     150 *                                                                       00003526         
+ 000512 D208 C1AF C2BF 00677 00787   151         MVC PLINE2+7(9),=XL9'4020202020204B2020' PROD PRICE PATTERN     00003527         
+ 000518 DE08 C1AF 200A 00677 0000A   152         ED PLINE2+7(9),$TPRICE                   PROD PRICE TO PLINE    00003528         
+                                     153 *                                                                       00003529         
+ 00051E D207 C1B8 C270 00680 00738   154         MVC PLINE2+16(8),=XL8'4020202020202020'  QUANTIY PATTERN        00003530         
+ 000524 DE07 C1B8 200E 00680 0000E   155         ED PLINE2+16(8),$TQUAN                   QUANITY TO PLINE       00003531         
+                                     156 *                                                                       00003532         
+ 00052A D204 C1C1 C2C8 00689 00790   157         MVC PLINE2+25(5),=XL5'40214B2020'        SHIPPING PATTERN       00003533         
+ 000530 DE04 C1C1 C118 00689 005E0   158         ED PLINE2+25(5),SHIP                     SHIPPING TO PLINE      00003534         
+                                     159 *                                                                       00003535         
+ 000536 D205 C1CA C292 00692 0075A   160         MVC PLINE2+34(6),=XL6'402021204B2020'    DISCOUNT PATTERN       00003536         
+ 00053C DE05 C1CA 2012 00692 00012   161         ED PLINE2+34(6),$TDISC                   DISCOUNT TO PLINE      00003537         
+                                     162 *                                                                       00003538         
+ 000542 5870 2000            00000   163         L R7,$TTOTAL                             BRING IN TOTAL         00003539         
+ 000546 4E70 C110            005D8   164         CVD R7,OUTTL                             TO BINARY              00003540         
+ 00054A F857 C11A C110 005E2 005D8   165         ZAP OUT(6),OUTTL(8)                      ZAP TO SMALLER FIELD   00003541         
+ 000550 D20D C1D1 C298 00699 00760   166         MVC PLINE2+41(14),=XL14'402020202020206B2020204B2020'           00003542         
+1                                                                                                               PAGE    4         
+0  LOC  OBJECT CODE    ADDR1 ADDR2  STMT   SOURCE STATEMENT                                                                       
+ 000556 DE0D C1D1 C11A 00699 005E2   167         ED PLINE2+41(14),OUT                     TOTAL TO PLINE         00003543         
+                                     168 *                                                                       00003544         
+ 00055C E020 C1A8 0064 00670         169         XPRNT PLINE2,100                         PRINT PLINE2           00003545         
+ 000562 4122 0020            00020   170         LA R2,32(R2)                             BUMP TABLE             00003546         
+ 000566 FA11 C126 C2A6 005EE 0076E   171         AP SALES(2),=PL2'1'                      ADD ONE TO TOTAL SALES 00003547         
+ 00056C FA55 C120 C11A 005E8 005E2   172         AP TOTAL(6),OUT(6)                       GRAND TOTAL COUNTER    00003548         
+ 000572 47F0 C03A            00502   173         B DO                                     BACK UP TO DO          00003549         
+ 000576                              174 ENDDO   DS 0H                                    END OF DO LOOP         00003550         
+ 000576 E020 C2CD 0011 00795         175         XPRNT =CL17' NUMBER OF SALES:',17        HEADER NUM SALES       00003551         
+ 00057C D203 C20D C278 006D5 00740   176         MVC PLINE3+1(4),=XL4'40202020'           NUM SALES PATTERN      00003552         
+ 000582 DE03 C20D C126 006D5 005EE   177         ED PLINE3+1(4),SALES                     NUM SALES TO PLINE     00003553         
+ 000588 E020 C20C 0064 006D4         178         XPRNT PLINE3,100                         PRINT NUM SALES        00003554         
+                                     179 *                                                                       00003555         
+ 00058E E020 C2DE 0015 007A6         180         XPRNT =CL21' TOTAL OF ALL SALES:',21     HEADER TOTAL SALES     00003556         
+ 000594 D20D C20D C298 006D5 00760   181         MVC PLINE3+1(14),=XL14'402020202020206B2020204B2020' PATTERN    00003557         
+ 00059A DE0D C20D C120 006D5 005E8   182         ED PLINE3+1(14),TOTAL                    TOTAL TO PLINE         00003558         
+ 0005A0 E020 C20C 0064 006D4         183         XPRNT PLINE3,100                         PRINT TOTAL SALES      00003559         
+                                     184 *                                                                       00003560         
+ 0005A6 E020 C27C 0014 00744         185         XPRNT =CL20' AVERAGE SALE COST:',20      AVERAGE COST HEADER    00003561         
+ 0005AC 9240 C20C      006D4         186         MVI PLINE3,C' '                          MOVE BLANK TO PLINE    00003562         
+ 0005B0 D262 C20D C20C 006D5 006D4   187         MVC PLINE3+1(99),PLINE3                  CLEAR REST OF PLINE    00003563         
+ 0005B6 FD51 C120 C126 005E8 005EE   188         DP TOTAL(6),SALES(2)                     FIND AVERAGE COST      00003564         
+ 0005BC D209 C20D C2A8 006D5 00770   189         MVC PLINE3+1(10),=XL10'4020206B2020204B2020' PATTERN            00003565         
+ 0005C2 DE09 C20D C120 006D5 005E8   190         ED PLINE3+1(10),TOTAL                    AVERAGE TO PLINE       00003566         
+ 0005C8 E020 C20C 0064 006D4         191         XPRNT PLINE3,100                         PRINT AVGERAGE         00003567         
+ 0005CE                              192         DROP R2                                                         00003568         
+                                     193 ***                                                                     00003569         
+ 0005CE 58DD 0004            00004   194         L  R13,4(R13)                            GET OUT BACK PTR       00003570         
+ 0005D2 98EC D00C            0000C   195         LM R14,R12,12(R13)                       RESTORE REGS           00003571         
+ 0005D6 07FE                         196         BR R14                                   GO BACK TO MAIN        00003572         
+                                     197 *******************************************************************     00003573         
+                                     198 *                     PRINT STORAGE                               *     00003574         
+                                     199 *******************************************************************     00003575         
+ 0005D8                              200        DS 0D                                                            00003576         
+ 0005D8 000000000000000C             201 OUTTL  DC PL8'0'                                  TOTAL PRICE           00003577         
+ 0005E0 500C                         202 SHIP   DC PL2'500'                                SHIPPING COST         00003578         
+ 0005E2 00000000000C                 203 OUT    DC PL6'0'                                  SMALLER FIELD OUTTL   00003579         
+ 0005E8 00000000000C                 204 TOTAL  DC PL6'0'                                  TOTAL SALES           00003580         
+ 0005EE 000C                         205 SALES  DC PL2'0'                                  NUM SALES             00003581         
+ 0005F0 FFFFFFFFFFFFFFFF             206 PSAVE  DC 18F'-1'                                 PRINT SAVE AREA       00003582         
+ 000638 00000000                     207 DIE    DC F'00'                                   SAFTEY CHECK VAR      00003583         
+ 00063C 40                           208 PLINE  DC CL1' '                                                        00003584         
+ 00063D D7D9D6C4E4C3E340             209        DC CL51'PRODUCT   PRICE   QTY   SHIPPING   DISCOUNT   TOTAL'     00003585         
+ 000670 40E3C5D4D7404040             210 PLINE2 DC CL100' TEMP'                            PRODUCT INFO          00003586         
+ 0006D4 E3C5D4D740404040             211 PLINE3 DC CL100'TEMP'                             SUMMARY REPORT        00003587         
+                                     212        LTORG                                                            00003588         
+ 000738 4020202020202020             213                =XL8'4020202020202020'                                                    
+ 000740 40202020                     214                =XL4'40202020'                                                            
+ 000744 40C1E5C5D9C1C7C5             215                =CL20' AVERAGE SALE COST:'                                                
+ 000758 4040                         216                =CL2' '                                                                   
+ 00075A 2021204B2020                 217                =XL6'402021204B2020'                                                      
+ 000760 402020202020206B             218                =XL14'402020202020206B2020204B2020'                                       
+ 00076E 001C                         219                =PL2'1'                                                                   
+ 000770 4020206B2020204B             220                =XL10'4020206B2020204B2020'                                               
+ 00077A 40D7D9C9D5E340D6             221                =CL13' PRINT OUTPUT'                                                      
+ 000787 4020202020204B20             222                =XL9'4020202020204B2020'                                                  
+ 000790 40214B2020                   223                =XL5'40214B2020'                                                          
+1                                                                                                               PAGE    5         
+0  LOC  OBJECT CODE    ADDR1 ADDR2  STMT   SOURCE STATEMENT                                                                       
+ 000795 40D5E4D4C2C5D940             224                =CL17' NUMBER OF SALES:'                                                  
+ 0007A6 40E3D6E3C1D340D6             225                =CL21' TOTAL OF ALL SALES:'                                               
+                                     226 *                                                                       00003589         
+                                     227 *                                                                       00003590         
+                                     228 *******************************************************************     00003591         
+                                     229 *NAME: BUILD                                                      *     00003592         
+                                     230 *FUNCTION: BUILDS THE TABLE                                       *     00003593         
+                                     231 *REGS: R2 - TABLE POINTER/TAB DESECT                              *     00003594         
+                                     232 *      R3 - EOT                                                   *     00003595         
+                                     233 *      R7 - HOLD TOTAL                                            *     00003596         
+                                     234 *******************************************************************     00003597         
+ 0007C0                              235 FIND    CSECT                                    FIND STARTS HERE       00003598         
+ 0007C0 90EC D00C            0000C   236         STM R14,R12,12(R13)                      SAVE CALLERS REGS      00003599         
+ 0007C4 18CF                         237         LR R12,R15                               POINT 12 AT BUILD      00003600         
+ 0007C0                              238         USING FIND,R12                           SET BASE REG           00003601         
+ 0007C6 41E0 C0C4            00884   239         LA R14,FSAVE                             POINT TO FSAVE AREA    00003602         
+ 0007CA 50ED 0008            00008   240         ST R14,8(R13)                            SET FORWARD PTR        00003603         
+ 0007CE 50DE 0004            00004   241         ST R13,4(R14)                            SET BACK PTR           00003604         
+ 0007D2 18DE                         242         LR R13,R14                               R13 IS AT BSAVE        00003605         
+ 0007D4 9823 1000            00000   243         LM R2,R3,0(R1)                           BRING IN PARMS         00003606         
+                                     244 ***                                                                     00003607         
+ 000000                              245         USING TAB,R2                             SET DSECT BASE REG     00003608         
+ 0007D8 5833 0000            00000   246         L R3,0(R3)                               BRING IN EOT           00003609         
+ 0007DC E020 C1D4 0002 00994         247         XPRNT =CL2' ',2                          NEW LINE               00003610         
+ 0007E2 E020 C1D6 001A 00996         248         XPRNT =CL26' FIND OUTPUT: SALES >=500',26 FIND HEADER           00003611         
+ 0007E8 E020 C12E 0034 008EE         249         XPRNT PLINE4,52                          OBJECT HEADER          00003612         
+ 0007EE                              250 DO2     DS 0H                                    START OF DO2 LOOP      00003613         
+ 0007EE 1923                         251         CR R2,R3                                 EOT REACHED?           00003614         
+ 0007F0 4780 C0B2            00872   252         BE ENDDO2                                YES, GO TO ENDDO2      00003615         
+ 0007F4 4720 C10C            008CC   253         BH DIEF                                  ERROR                  00003616         
+ 0007F8 5870 2000            00000   254         L R7,$TTOTAL                             BRING IN TOTAL         00003617         
+ 0007FC 4E70 C110            008D0   255         CVD R7,CPTTL                             TO BINARY              00003618         
+ 000800 F857 C118 C110 008D8 008D0   256         ZAP OUTTTL(6),CPTTL(8)                   MOVE TO SMALLER FIELD  00003619         
+ 000806                              257 IF      DS 0H                                    START OF IT            00003620         
+ 000806 F953 C118 C1D0 008D8 00990   258         CP OUTTTL,=PL4'50000'                    SALE TOTAL >= 500?     00003623         
+ 00080C 4740 C0AA            0086A   259         BL NEXT                                  NOPE, TO TO NEXT       00003624         
+ 000810 D205 C163 2004 00923 00004   260         MVC PLINE5+1(6),$TPID                    PROD ID TO PLINE       00003625         
+                                     261 *                                                                       00003626         
+ 000816 D208 C169 C204 00929 009C4   262         MVC PLINE5+7(9),=XL9'4020202020204B2020' PROD PRICE PATTERN     00003627         
+ 00081C DE08 C169 200A 00929 0000A   263         ED PLINE5+7(9),$TPRICE                   PROD PRICE TO PLINE    00003628         
+                                     264 *                                                                       00003629         
+ 000822 D207 C172 C1C8 00932 00988   265         MVC PLINE5+16(8),=XL8'4020202020202020'  QUANTIY PATTERN        00003630         
+ 000828 DE07 C172 200E 00932 0000E   266         ED PLINE5+16(8),$TQUAN                   QUANITY TO PLINE       00003631         
+                                     267 *                                                                       00003632         
+ 00082E D204 C17B C20D 0093B 009CD   268         MVC PLINE5+25(5),=XL5'40214B2020'        SHIPPING PATTERN       00003633         
+ 000834 DE04 C17B C11E 0093B 008DE   269         ED PLINE5+25(5),SHIPF                    SHIPPING TO PLINE      00003634         
+                                     270 *                                                                       00003635         
+ 00083A D205 C184 C1F0 00944 009B0   271         MVC PLINE5+34(6),=XL6'402021204B2020'    DISCOUNT PATTERN       00003636         
+ 000840 DE05 C184 2012 00944 00012   272         ED PLINE5+34(6),$TDISC                   DISCOUNT TO PLIME      00003637         
+                                     273 *                                                                       00003638         
+ 000846 5870 2000            00000   274         L R7,$TTOTAL                             BRING IN TOTAL         00003639         
+ 00084A 4E70 C120            008E0   275         CVD R7,OUTLF                             TO BINARY              00003640         
+ 00084E F857 C128 C120 008E8 008E0   276         ZAP OUTF(6),OUTLF(8)                     ZAP TO SMALLER FIELD   00003641         
+ 000854 D20D C18B C1F6 0094B 009B6   277         MVC PLINE5+41(14),=XL14'402020202020206B2020204B2020'           00003642         
+ 00085A DE0D C18B C128 0094B 008E8   278         ED PLINE5+41(14),OUTF                    TOTAL TO PLINE         00003643         
+                                     279 *                                                                       00003644         
+ 000860 E020 C162 0064 00922         280         XPRNT PLINE5,100                                                00003645         
+1                                                                                                               PAGE    6         
+0  LOC  OBJECT CODE    ADDR1 ADDR2  STMT   SOURCE STATEMENT                                                                       
+ 000866 47F0 C0AA            0086A   281         B NEXT                                   GO TO NEXT             00003646         
+ 00086A 4122 0020            00020   282 NEXT    LA R2,32(R2)                             BUMP TABLE             00003647         
+ 00086E 47F0 C02E            007EE   283         B DO2                                    BACK UP TO DO2         00003648         
+ 000872                              284 ENDDO2  DS 0H                                    END OF DO2 LOOP        00003649         
+ 000872 E020 C1D4 0002 00994         285         XPRNT =CL2' ',2                          NEW LINE               00003650         
+ 000878                              286         DROP R2                                                         00003651         
+                                     287 ***                                                                     00003652         
+ 000878 58DD 0004            00004   288         L  R13,4(R13)                            GET OUT BACK PTR       00003653         
+ 00087C 98EC D00C            0000C   289         LM R14,R12,12(R13)                       RESTORE REGS           00003654         
+ 000880 07FE                         290         BR R14                                   GO BACK TO MAIN        00003655         
+                                     291 *******************************************************************     00003656         
+                                     292 *                     FIND STORAGE                                *     00003657         
+                                     293 *******************************************************************     00003658         
+ 000884 FFFFFFFFFFFFFFFF             294 FSAVE  DC 18F'-1'                                 PRINT SAVE AREA       00003659         
+ 0008CC 00000000                     295 DIEF   DC F'00'                                   SAFTEY CHECK VAR      00003660         
+ 0008D0                              296        DS 0D                                                            00003661         
+ 0008D0 000000000000000C             297 CPTTL  DC PL8'0'                                  TOTAL PRICE           00003662         
+ 0008D8 00000000000C                 298 OUTTTL DC PL6'0'                                  SMALLER FIELD CPTTL   00003663         
+ 0008DE 500C                         299 SHIPF  DC PL2'500'                                SHIPPING COST         00003664         
+ 0008E0                              300        DS 0D                                                            00003665         
+ 0008E0 000000000000000C             301 OUTLF  DC PL8'0'                                  TOTAL PRICE           00003666         
+ 0008E8 00000000000C                 302 OUTF   DC PL6'0'                                  SMALLER FIELD OUTTL   00003667         
+ 0008EE 40                           303 PLINE4 DC CL1' '                                                        00003668         
+ 0008EF D7D9D6C4E4C3E340             304        DC CL51'PRODUCT   PRICE   QTY   SHIPPING   DISCOUNT   TOTAL'     00003669         
+ 000922 E3C5D4D740404040             305 PLINE5 DC CL100'TEMP'                             PRODUCT INFO          00003670         
+                                     306 *                                                                       00003671         
+                                     307 *                                                                       00003672         
+ 00000F                              308 R15  EQU  15                                                            00003673         
+ 00000E                              309 R14  EQU  14                                                            00003680         
+ 00000D                              310 R13  EQU  13                                                            00003700         
+ 00000C                              311 R12  EQU  12                                                            00003800         
+ 00000B                              312 R11  EQU  11                                                            00003900         
+ 00000A                              313 R10  EQU  10                                                            00004000         
+ 000009                              314 R9   EQU  9                                                             00004100         
+ 000008                              315 R8   EQU  8                                                             00004200         
+ 000007                              316 R7   EQU  7                                                             00004300         
+ 000006                              317 R6   EQU  6                                                             00004400         
+ 000005                              318 R5   EQU  5                                                             00004500         
+ 000004                              319 R4   EQU  4                                                             00004600         
+ 000003                              320 R3   EQU  3                                                             00004700         
+ 000002                              321 R2   EQU  2                                                             00004800         
+ 000001                              322 R1   EQU  1                                                             00004900         
+                                     323      END                                                                00004910         
+ 000988 4020202020202020             324                =XL8'4020202020202020'                                                    
+ 000990 0050000C                     325                =PL4'50000'                                                               
+ 000994 4040                         326                =CL2' '                                                                   
+ 000996 40C6C9D5C440D6E4             327                =CL26' FIND OUTPUT: SALES >=500'                                          
+ 0009B0 2021204B2020                 328                =XL6'402021204B2020'                                                      
+ 0009B6 402020202020206B             329                =XL14'402020202020206B2020204B2020'                                       
+ 0009C4 4020202020204B20             330                =XL9'4020202020204B2020'                                                  
+ 0009CD 40214B2020                   331                =XL5'40214B2020'                                                          
+0***  NO   STATEMENTS FLAGGED -  NO   WARNINGS,  NO   ERRORS                                                                      
+0*** DYNAMIC CORE AREA USED:  LOW:   24916 HIGH:    2528 LEAVING:  466124 FREE BYTES. AVERAGE:       82 BYTES/STMT ***            
+0*** ASSEMBLY TIME =    0.002 SECS,   166000 STATEMENTS/SEC ***                                                                   
+0*** PROGRAM EXECUTION BEGINNING - ANY OUTPUT BEFORE EXECUTION TIME MESSAGE IS PRODUCED BY USER PROGRAM ***                       
+1BEGIN XSNAP - CALL     1 AT D0000024 USER STORAGE                                                                                
+0                             CORE ADDRESSES SPECIFIED-     0000E0 TO 00039C                                                      
+ 0000E0   0000069F E7D2F4F4 F5F40001 295F0000    001F0010 0F404040 40404040 40404040   *....XK4454...........           *         
+ 000100   00018D1C D9C1F6F5 F0F80001 495F0000    068F0050 0F404040 40404040 40404040   *....RA6508...........           *         
+ 000120   00065180 E3D1F4F8 F0F60001 695F0000    244F0000 0F404040 40404040 40404040   *....TJ4806...........           *         
+ 000140   0000538E D1E8F7F6 F3F40000 995F0000    022F0100 0F404040 40404040 40404040   *....JY7634...........           *         
+ 000160   000033F4 E4E3F7F5 F3F40001 150F0000    012F0100 0F404040 40404040 40404040   *...4UT7534...........           *         
+ 000180   0005D6D3 E9C1F5F3 F5F30005 995F0000    065F0750 0F404040 40404040 40404040   *..OLZA5353...........           *         
+ 0001A0   000002BC C7E8F7F1 F8F90000 100F0000    002F0000 0F404040 40404040 40404040   *....GY7189...........           *         
+ 0001C0   002D7A94 E8D7F4F4 F1F90009 950F0000    300F0500 0F404040 40404040 40404040   *....YP4419...........           *         
+ 0001E0   C8C5D9C5 4040C9E2 40C5D5E3 D9E84040    40404040 40404040 40404040 40404040   *HERE  IS ENTRY                  *         
+   LINES    000200-000340    SAME AS ABOVE                                                                                        
+ 000360   000001E0 000000E0 00000360 000000E0    00000360 000000E0 00000360 F5F5F5F5   *............................5555*         
+ 000380   00000390 000004C8 000007C0 F5F5F5F5    90ECD00C 18CF41E0 C0E850ED 000850DE   *.......H....5555.........Y......*         
+0                                                                                                                                 
+                                                                                                                                  
+ PRINT OUTPUT                                                                                                                     
+ PRODUCT   PRICE   QTY   SHIPPING   DISCOUNT   TOTAL                                                                              
+ XK4454    12.95       1  5.00    1.00          16.95                                                                           
+ RA6508    14.95      68  5.00    5.00       1,016.60                                                                           
+ TJ4806    16.95     244  5.00    0.00       4,140.80                                                                           
+ JY7634     9.95      22  5.00    10.00         213.90                                                                           
+ UT7534    11.50      12  5.00    10.00         133.00                                                                           
+ ZA5353    59.95      65  5.00    75.00       3,826.75                                                                           
+ GY7189     1.00       2  5.00    0.00           7.00                                                                           
+ YP4419    99.50     300  5.00    50.00      29,805.00                                                                           
+ NUMBER OF SALES:                                                                                                                 
+    8                                                                                                                             
+ TOTAL OF ALL SALES:                                                                                                              
+      39,160.00                                                                                                                   
+ AVERAGE SALE COST:                                                                                                               
+   4,895.00                                                                                                                       
+                                                                                                                                  
+ FIND OUTPUT: SALES >=500                                                                                                         
+ PRODUCT   PRICE   QTY   SHIPPING   DISCOUNT   TOTAL                                                                              
+ RA6508    14.95      68  5.00    5.00       1,016.60                                                                           
+ TJ4806    16.95     244  5.00    0.00       4,140.80                                                                           
+ ZA5353    59.95      65  5.00    75.00       3,826.75                                                                           
+ YP4419    99.50     300  5.00    50.00      29,805.00                                                                           
+                                                                                                                                  
+0*** EXECUTION TIME =    0.001 SECS.       515 INSTRUCTIONS EXECUTED -   515000 INSTRUCTIONS/SEC ***                              
+0*** AM004 - NORMAL USER TERMINATION BY RETURN ***                                                                                

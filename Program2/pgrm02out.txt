@@ -1,0 +1,148 @@
+1                    J E S 2  J O B  L O G  --  S Y S T E M  S 0 W 1  --  N O D E  Z O S K C T R         
+0 
+ 13.09.49 JOB08308 ---- FRIDAY,    10 FEB 2017 ----
+ 13.09.49 JOB08308  IRR010I  USERID KC03GFC  IS ASSIGNED TO THIS JOB.
+ 13.09.50 JOB08308  ICH70001I KC03GFC  LAST ACCESS AT 13:09:28 ON FRIDAY, FEBRUARY 10, 2017
+ 13.09.50 JOB08308  $HASP373 KC03GFCA STARTED - INIT 1    - CLASS A        - SYS S0W1
+ 13.09.50 JOB08308  -                                         --TIMINGS (MINS.)--            ----PAGING COUNTS---
+ 13.09.50 JOB08308  -JOBNAME  STEPNAME PROCSTEP    RC   EXCP    TCB    SRB  CLOCK   SERV  PG   PAGE   SWAP    VIO SWAPS
+ 13.09.50 JOB08308  -KC03GFCA                      00     45 ******    .00     .0    125   0      0      0      0     0
+ 13.09.50 JOB08308  -KC03GFCA ENDED.  NAME-VICTOR               TOTAL TCB CPU TIME=   .00  TOTAL ELAPSED TIME=    .0
+ 13.09.50 JOB08308  $HASP395 KC03GFCA ENDED
+0------ JES2 JOB STATISTICS ------
+-  10 FEB 2017 JOB EXECUTION DATE
+-           95 CARDS READ
+-          148 SYSOUT PRINT RECORDS
+-            0 SYSOUT PUNCH RECORDS
+-           14 SYSOUT SPOOL KBYTES
+-         0.00 MINUTES EXECUTION TIME
+         1 //KC03GFCA JOB ,'VICTOR',MSGCLASS=H                                     JOB08308
+         2 //STEP1 EXEC PGM=ASSIST,PARM='MACRO=F'                                  00000200
+         3 //STEPLIB DD DSN=KC02293.ASSIST.LOADLIB,DISP=SHR                        00000300
+         4 //SYSIN DD *                                                            00000400
+         5 //FT05F001 DD *                                                         00001920
+         6 //SYSPRINT DD SYSOUT=*                                                  00001992
+ ICH70001I KC03GFC  LAST ACCESS AT 13:09:28 ON FRIDAY, FEBRUARY 10, 2017
+ IEF236I ALLOC. FOR KC03GFCA STEP1
+ IGD103I SMS ALLOCATED TO DDNAME STEPLIB
+ IEF237I JES2 ALLOCATED TO SYSIN
+ IEF237I JES2 ALLOCATED TO FT05F001
+ IEF237I JES2 ALLOCATED TO SYSPRINT
+ IEF142I KC03GFCA STEP1 - STEP WAS EXECUTED - COND CODE 0000
+ IGD104I KC02293.ASSIST.LOADLIB                       RETAINED,  DDNAME=STEPLIB 
+ IEF285I   KC03GFC.KC03GFCA.JOB08308.D0000101.?         SYSIN         
+ IEF285I   KC03GFC.KC03GFCA.JOB08308.D0000102.?         SYSIN         
+ IEF285I   KC03GFC.KC03GFCA.JOB08308.D0000103.?         SYSOUT        
+ IEF373I STEP/STEP1   /START 2017041.1309
+ IEF032I STEP/STEP1   /STOP  2017041.1309 
+         CPU:     0 HR  00 MIN  00.00 SEC    SRB:     0 HR  00 MIN  00.00 SEC    
+         VIRT:   584K  SYS:   268K  EXT:        0K  SYS:    11364K
+         ATB- REAL:                     0K  SLOTS:                     0K
+              VIRT- ALLOC:       0M SHRD:       0M
+ IEF375I  JOB/KC03GFCA/START 2017041.1309
+ IEF033I  JOB/KC03GFCA/STOP  2017041.1309 
+         CPU:     0 HR  00 MIN  00.00 SEC    SRB:     0 HR  00 MIN  00.00 SEC    
+1*** ASSIST 4.0/A2-05/15/82  470/V7A/0:OS/VS2  INS=SDFP7/X=BGHO, CHECK/TRC/=1180, OPTS=CDKMPR FROM PENN ST*NIU COMPSCI*LT         
+0MACRO=F                                                                                                                          
+0                                                                                                               PAGE    1         
+0  LOC  OBJECT CODE    ADDR1 ADDR2  STMT   SOURCE STATEMENT                                                                       
+                                       1 ***************************************                                 00000500         
+                                       2 *Victor Amaro                         *                                 00000600         
+                                       3 *Dr. Jim Leon                         *                                 00000610         
+                                       4 *CSCI 360, Section 2                  *                                 00000620         
+                                       5 *TA: Grace                            *                                 00000630         
+                                       6 *z1747708                             *                                 00000700         
+                                       7 *Assignment 2: Performs mileage stats *                                 00000800         
+                                       8 ***************************************                                 00000900         
+ 000000                                9 MAIN    CSECT                                                           00001000         
+ 000000                               10         USING MAIN,15        BASE REG                                   00001010         
+ 000000 1BBB                          11         SR R11,11            SET R11 TO ZERO(COUNTER FOR TOTAL MPG)     00001011         
+ 000002 1B99                          12         SR R9,R9             SET R9 TO ZERO(COUNTER FOR TOTAL CARS)     00001012         
+ 000004 1B77                          13         SR R7,R7             SET R7 TO ZERO(COUNTER FOR TOTAL GALLONS)  00001013         
+ 000006 E020 F0CA 0033 000CA          14         XPRNT PLINE1,51      PRINT NIU VEHICLE REPORT HEADER            00001014         
+ 00000C E020 F0FD 003D 000FD          15         XPRNT PLINE2,61      PRINT DESCRIPTION HEADER                   00001015         
+                                      16 *                                                                       00001016         
+ 000012 E000 F07A 0050 0007A          17 TOP     XREAD CARD,80        READ RECORD                                00001020         
+ 000018 4740 F050            00050    18         BC B'0100',EXIT      CHECK FOR EOF                              00001100         
+ 00001C 5320 F07A            0007A    19         XDECI R2,CARD        GET FIRST NUM(VEHICLE NUM)                 00001110         
+ 000020 5351 0000            00000    20         XDECI R5,0(R1)       GET SECOND NUM(MILES)                      00001120         
+ 000024 5331 0000            00000    21         XDECI R3,0(R1)       GET THRID NUM(GALLONS)                     00001130         
+ 000028 5220 F13B            0013B    22         XDECO R2,OUTPT1      PREPARE TO PRINT CAR NUM                   00001132         
+ 00002C 5250 F147            00147    23         XDECO R5,OUTPT2      PREPARE TO PRINT MILES                     00001133         
+ 000030 5230 F153            00153    24         XDECO R3,OUTPT3      PREPARE TO PRINT GALLONS                   00001135         
+ 000034 5A90 F1BC            001BC    25         A R9,ONE             ADD ONE TO R6(VEHICLE COUNT)               00001136         
+ 000038 1A73                          26         AR R7,R3             COUNTER FOR TOTAL GALLONSNS                00001137         
+ 00003A 5C40 F1BC            001BC    27         M R4,ONE             SET R4 FOR DIVISION                        00001138         
+ 00003E 1D43                          28         DR R4,R3             FIND MILES PER GALLON                      00001140         
+ 000040 1AB5                          29         AR R11,R5            ADD MILES/GALLONS TO COUNT                 00001141         
+ 000042 5250 F15F            0015F    30         XDECO R5,OUTPT4      PREPARE TO PRINT MILES/GALLONS             00001142         
+ 000046 E020 F13A 0031 0013A          31         XPRNT PLINE3,49      PRINT VEHICLE INFO                         00001143         
+ 00004C 47F0 F012            00012    32         B TOP                GO TO TOP OF LOOP                          00001145         
+                                      33 *                                                                       00001150         
+ 000050 5290 F184            00184    34 EXIT    XDECO R9,OUTPT5     PREPARE TO PRINT NUMBER OF VEHICLES         00001151         
+ 000054 E020 F16B 0026 0016B          35         XPRNT PLINE4,38     PRINT NUMBER OF VEHICLES                    00001160         
+ 00005A 5C60 F1C0            001C0    36         M R6,THREE          FIND TOTAL COST OF GAS                      00001161         
+ 00005E 5270 F1AE            001AE    37         XDECO R7,OUTPT6     PREPARE TO PRINT TOTAL COST OF GAS          00001162         
+ 000062 E020 F190 002A 00190          38         XPRNT PLINE5,42     PRINT TOTAL COST OF GAS                     00001170         
+ 000068 5CA0 F1BC            001BC    39         M R10,ONE           PREPARE R10 FOR DIVSION                     00001180         
+ 00006C 1DA9                          40         DR R10,R9           FIND THE AVERAGE MPG                        00001190         
+ 00006E 52B0 F1D1            001D1    41         XDECO R11,OUTPT7    PREPARE TO PRINT AVERAGE MPG                00001191         
+ 000072 E020 F1C4 0019 001C4          42         XPRNT PLINE6,25     PRINT THE AVERAGE MPG                       00001192         
+ 000078 07FE                          43         BR R14              EXIT PROGRAM                                00001200         
+                                      44 ********************************************************************    00001210         
+                                      45 *                  MAIN STORAGE                                    *    00001300         
+                                      46 ********************************************************************    00001400         
+ 00007A C3C1D9C4C3C1D9C4              47 CARD  DC 20CL4'CARD'                                 80 BYTE CARD       00001410         
+ 0000CA 40                            48 PLINE1 DC CL1' '                                     CARRIAGE CONTROL   00001500         
+ 0000CB 4040404040404040              49        DC CL50'                 NIU VEHICLE REPORT'  HEADER             00001600         
+ 0000FD 40                            50 PLINE2 DC CL1' '                                     CARRIAGE CONTROL   00001610         
+ 0000FE 4040404040404040              51        DC CL60'           VEHICLE   GALLONS   MILES  MILES/GALLONS'     00001620         
+ 00013A 40                            52 PLINE3 DC CL1' '                                                        00001621         
+1                                                                                                               PAGE    2         
+0  LOC  OBJECT CODE    ADDR1 ADDR2  STMT   SOURCE STATEMENT                                                                       
+ 00013B D6E4E3D7E3404040              53 OUTPT1 DC CL12'OUTPT'                                CAR NUMBER         00001622         
+ 000147 D6E4E3D7E3404040              54 OUTPT2 DC CL12'OUTPT'                                MILES              00001623         
+ 000153 D6E4E3D7E3404040              55 OUTPT3 DC CL12'OUTPT'                                GALLONS            00001624         
+ 00015F D6E4E3D7E3404040              56 OUTPT4 DC CL12'OUTPT'                                MILES/GALLONS      00001625         
+ 00016B 40                            57 PLINE4 DC CL1' '                                     CARRIAGE CONTROL   00001626         
+ 00016C E3D6E3C1D340C3C1              58        DC CL24'TOTAL CAR PROCESESS:'                 TOTAL CAR HEADER   00001627         
+ 000184 D6E4E3D7E3404040              59 OUTPT5 DC CL12'OUTPT'                                NUMBER OF VEHICLES 00001628         
+ 000190 40                            60 PLINE5 DC CL1' '                                     CARRIAGE CONTROL   00001629         
+ 000191 E3D6E3C1D340C3D6              61        DC CL29'TOTAL COST OF GAS IN DOLLARS:'        TOTAL DOLLAR AMT   00001630         
+ 0001AE D6E4E3D7E3404040              62 OUTPT6 DC CL12'OUTPT'                                TOTAL COST OF GAS  00001631         
+ 0001BC 00000001                      63 ONE    DC F'1'                                       FULLWORD, 1        00001640         
+ 0001C0 00000003                      64 THREE  DC F'3'                                       FULLWORD, 3        00001650         
+ 0001C4 40                            65 PLINE6 DC CL1' '                                     CARRIAGE CONTROL   00001660         
+ 0001C5 C1E5C5D9C1C7C540              66        DC CL12'AVERAGE MPG:'                        AVERAGE MPG HEADER  00001670         
+ 0001D1 D6E4E3D7E3404040              67 OUTPT7 DC CL12'OUTPT'                               AVERAGE MPG         00001680         
+ 00000E                               68 R14  EQU 14                                                             00001700         
+ 00000F                               69 R15  EQU 15                                                             00001800         
+ 000001                               70 R1   EQU  1                                                             00001810         
+ 000002                               71 R2   EQU  2                                                             00001820         
+ 000003                               72 R3   EQU  3                                                             00001830         
+ 000005                               73 R5   EQU  5                                                             00001840         
+ 000004                               74 R4   EQU  4                                                             00001850         
+ 000006                               75 R6   EQU  6                                                             00001860         
+ 000007                               76 R7   EQU  7                                                             00001861         
+ 000009                               77 R9   EQU  9                                                             00001870         
+ 00000A                               78 R10  EQU 10                                                             00001880         
+ 00000B                               79 R11  EQU 11                                                             00001890         
+                                      80      END                                                                00001900         
+0***  NO   STATEMENTS FLAGGED -  NO   WARNINGS,  NO   ERRORS                                                                      
+0*** DYNAMIC CORE AREA USED:  LOW:    6680 HIGH:     856 LEAVING:  486032 FREE BYTES. AVERAGE:       93 BYTES/STMT ***            
+0*** ASSEMBLY TIME =    0.000 SECS,    81000 STATEMENTS/SEC ***                                                                   
+0*** PROGRAM EXECUTION BEGINNING - ANY OUTPUT BEFORE EXECUTION TIME MESSAGE IS PRODUCED BY USER PROGRAM ***                       
+                  NIU VEHICLE REPORT                                                                                              
+            VEHICLE   GALLONS   MILES  MILES/GALLONS                                                                              
+            1         300          30          10                                                                                 
+            2         550          24          22                                                                                 
+         3333        1200         130           9                                                                                 
+         4444         600          35          17                                                                                 
+         5555         750          70          10                                                                                 
+         6666        1000          45          22                                                                                 
+         7777        1600         105          15                                                                                 
+ TOTAL CAR PROCESESS:               7                                                                                             
+ TOTAL COST OF GAS IN DOLLARS:        1317                                                                                        
+ AVERAGE MPG:          15                                                                                                         
+0*** EXECUTION TIME =    0.000 SECS.       129 INSTRUCTIONS EXECUTED -   129000 INSTRUCTIONS/SEC ***                              
+0*** AM004 - NORMAL USER TERMINATION BY RETURN ***                                                                                

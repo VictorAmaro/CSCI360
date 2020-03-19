@@ -1,0 +1,122 @@
+//KC03GFCA JOB ,'VICTOR',MSGCLASS=H                                     00000100
+//STEP1 EXEC PGM=ASSIST,PARM='MACRO=F'                                  00000200
+//STEPLIB DD DSN=KC02293.ASSIST.LOADLIB,DISP=SHR                        00000300
+//SYSIN DD *                                                            00000400
+*******************************************************************     00000500
+*                   FREE EXTENSION                                *     00000510
+*Victor Amaro                                                     *     00000600
+*Dr. Jim Leon                                                     *     00000700
+*CSCI 360, Section 2                                              *     00000800
+*TA: Grace                                                        *     00000900
+*z1747708                                                         *     00001000
+*Assignment 6: PREPARE A PAYROLL REPORT                           *     00001100
+*******************************************************************     00001500
+MAIN    CSECT                                                           00001600
+        USING MAIN,R15                                                  00001700
+        XPRNT =CL43' EMPLOY# BASEPAY OVERTIME BONUS PAYAMT NAME',43     00001710
+*                                                                       00001720
+TOP     XREAD CARD,80                                     READ RECORD   00001730
+        BC B'0100',EXIT                                   CHECK FOR EOF 00001740
+        PACK ENUM(2),INNUM(2)                           PACK EMPLOY NUM 00001750
+        PACK HRS(2),INHRS(2)                            PACK EMPLOY HRS 00001760
+        PACK PAY(2),INPAY(2)                            PACK PAYRATE    00001761
+        PACK BONUS(4),INBON(4)                          PACK BONUS AMT  00001762
+        SP TPAY(4),TPAY(4)                           RESET TOTALPAY     00001763
+        SP OTRATE(4),OTRATE(4)                       RESET OTPAY        00001764
+IF      CP HRS(2),FORTY(2)                           IS HRS > 40?       00001765
+        BNH ELSE                                     YES, GO TO ELSE    00001766
+        ZAP BASEPAY(4),PAY(2)                      LOAD RATE INTO TEMP  00001767
+        MP BASEPAY(4),FORTY(2)                      HRS * RATE          00001768
+        ZAP OTRATE(4),HRS(2)                       MOVE HRS TO TEMP     00001770
+        SP OTRATE(4),FORTY(2)                      FIND OT HRS          00001771
+        MP OTRATE(4),FIFTY(2)                      FIND OT RATE         00001772
+        AP TPAY(4),BONUS(4)                        ADD TO TOTALPAY      00001774
+        AP TPAY(4),BASEPAY(4)                      ADD TO TOTALPAY      00001775
+        AP TPAY(4),OTRATE(4)                       ADD TO TOTALPAY      00001776
+        B ENDIF                                      GO TO ENDIF        00001777
+ELSE    DS 0H                                       ELSE HRS > 40       00001778
+        ZAP BASEPAY(4),PAY(2)                      LOAD RATE INTO TEMP  00001779
+        MP BASEPAY(4),HRS(2)                       HRS * RATE           00001780
+        SP OTRATE(4),OTRATE(4)                     NO OTRATE            00001781
+        AP TPAY(4),BASEPAY(4)                      ADD TO TOTAL PAY     00001782
+        AP TPAY(4),BONUS(4)                        ADD TO TOTAL PAY     00001783
+ENDIF   DS 0H                                       END OF IF           00001784
+        MVC PLINE+1(4),=XL4'40212020'               PATTERN FOR EMPLOY# 00001785
+        ED PLINE+1(4),ENUM                        MOVE EMPLOY# TO PLINE 00001786
+        MVC PLINE+6(10),=XL10'4020202021202020204B' BAEPAYPATTERN       00001787
+        ED PLINE+6(10),BASEPAY                   MOVE BASEPAY TO PLINE  00001788
+        MVC PLINE+15(8),=XL8'4020202021202020'   PATTERN FOR OT RATE    00001789
+        ED PLINE+15(8),OTRATE                    OT RATE TO PLINE       00001790
+        MVC PLINE+23(8),=XL10'40202020202120202020' BONUS PATTERN       00001791
+        ED PLINE+23(8),BONUS                       MOVE BONUS TO PLINE  00001792
+        MVC PLINE+31(8),=XL8'4020202021202020'   PATTERN FOR TOTALPAY   00001793
+        ED PLINE+31(8),TPAY                      TOTALPAY TO PLINE      00001794
+        MVC PLINE+43(10),INNAME                    MOVE NAME TO PLINE   00001795
+        XPRNT PLINE,100                            PRINT PLINE          00001796
+        AP EPLYCNT(1),NUM(3)                       ADD 1 TO EMPLOY CNT  00001797
+        AP WPAY(4),TPAY(4)                       KEEP TRACK OF WHOLEPAY 00001798
+        B TOP                                           BACK TO TOP     00001799
+EXIT    DS 0H                                                           00001800
+        XPRNT =CL2' ',2                             NEW LINE            00001801
+        XPRNT =CL16' TOTAL PAY AMNT:',16            TOTAL PAY HEADER    00001802
+        MVC PLINE3+1(8),=XL8'4020202020202020'   PATTERN FOR WHOLEPAY   00001803
+        ED PLINE3+1(10),WPAY                     WHOLEPAY TO PLINE      00001804
+        XPRNT PLINE3,10                          PRINT PLINE            00001805
+        XPRNT =CL17' TOTAL EMPOLYEES:',17           TOTAL EMPLY HEADER  00001806
+        MVC PLINE2+1(2),=XL2'402020'             PATTERN FOR EMPLOY CNT 00001807
+        ED PLINE2+1(1),EPLYCNT                  MOVE EMPLOYCNT TO PLINE 00001808
+        XPRNT PLINE2,10                         PRINT PLINE             00001809
+        DP WPAY(4),EPLYCNT(1)                   FIND THE AVG PAY        00001810
+        XPRNT =CL14' AVG PAY AMNT:',14          AVG PAY  HEADER         00001811
+        MVC PLINE4+1(10),=XL10'4020202020204B202020' PATTERN FOR AVGPAY 00001812
+        ED PLINE4+1(8),WPAY                    AVG PAY TO PLINE         00001813
+        XPRNT PLINE4,10                         PRINT PLINE             00001814
+        BR R14                                  EXIT PROGRAM            00001820
+**********************************                                      00001900
+*         MAIN STORAGE           *                                      00002000
+**********************************                                      00002100
+PLINE   DC CL100' '                                                     00002102
+PLINE2  DC CL10' '                                                      00002103
+PLINE3  DC CL10' '                                                      00002104
+PLINE4  DC CL10' '                                                      00002105
+EPLYCNT DC PL1'0'                                                       00002107
+FORTY   DC PL2'40'                                                      00002108
+FIFTY   DC PL2'50'                                                      00002109
+BASEPAY DC PL4'0'                                                       00002110
+OTRATE  DC PL4'1'                                                       00002111
+TPAY    DC PL4'0'                                                       00002112
+WPAY    DC PL4'0'                                                       00002113
+NUM     DC PL3'1'                                                       00002114
+ENUM    DC CL2'HI'                                                      00002115
+HRS     DC CL2'HI'                                                      00002116
+PAY     DC CL2'HI'                                                      00002117
+BONUS   DC CL4'HI'                                                      00002118
+NAME    DC CL20'NAME'                                                   00002120
+CARD    DS 0CL80                                        DUMMY LABEL     00002200
+INNUM   DC CL2'HI'                       IN CHAIN EMPLOYEE NUM IN CHAR  00002300
+        DC CL1' '                                       SPACE IN QUOTES 00002400
+INHRS   DC CL2'HI'                                      INHRS IN CHAR   00002500
+        DC CL1' '                                       BLANK           00002600
+INPAY   DC CL2'HI'                                      IN PAY RATE     00002700
+        DC CL1' '                                       BLANK           00002800
+INBON   DC CL4'HI'                                     IN BONUS IN CHAR 00002900
+        DC CL1' '                                       BLANK           00003000
+INNAME  DC CL20'NAME'                                  IN NAME IN CHAR  00003100
+PADD    DC CL46'FILL'                             FILL CARD TO 80 BYTES 00003200
+*                                                                       00003210
+*                                                                       00003220
+R15  EQU  15                                                            00003300
+R14  EQU  14                                                            00003400
+     LTORG                                                              00003710
+     END                                                                00003720
+/*                                                                      00003800
+//FT05F001 DD *                                                         00003900
+01 43 20 1500 JOHNSON                                                   00004000
+20 09 50 1000 SMITH                                                     00004100
+21 24 40 0000 DOE                                                       00004200
+70 42 35 1900 MILLARD                                                   00004300
+45 30 17 0000 HEGDE                                                     00004400
+02 47 10 2000 HOWE                                                      00004500
+38 50 25 1000 COOKE                                                     00004600
+/*                                                                      00004700
+//SYSPRINT DD SYSOUT=*                                                  00004800
